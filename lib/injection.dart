@@ -23,9 +23,13 @@ import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
+import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
+import 'package:ditonton/presentation/provider/top_rated_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
+import 'package:ditonton/presentation/provider/zoom_drawer_notifier.dart';
+import 'package:flutter_zoom_drawer/config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
@@ -76,6 +80,21 @@ void init() {
       getTopRatedTvSeries: locator(),
     ),
   );
+  locator.registerLazySingleton(
+    () => ZoomDrawerNotifier(
+      zoomDrawerController: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => PopularTvSeriesNotifier(
+      getPopularTvSeries: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => TopRatedTvSeriesNotifier(
+      getTopRatedTvSeries: locator(),
+    ),
+  );
 
   // use case
   locator.registerLazySingleton(() => GetNowPlayingMovies(locator()));
@@ -121,4 +140,5 @@ void init() {
 
   // external
   locator.registerLazySingleton(() => http.Client());
+  locator.registerLazySingleton(() => ZoomDrawerController());
 }

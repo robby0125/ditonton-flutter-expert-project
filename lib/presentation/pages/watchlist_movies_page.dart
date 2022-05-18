@@ -51,7 +51,12 @@ class _WatchlistMoviesPageState extends State<WatchlistMoviesPage>
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final movie = data.watchlistMovies[index];
-                  return MovieCard(movie);
+                  return ItemCard(
+                    id: movie.id,
+                    title: movie.title,
+                    overview: movie.overview,
+                    posterPath: movie.posterPath,
+                  );
                 },
                 itemCount: data.watchlistMovies.length,
               );

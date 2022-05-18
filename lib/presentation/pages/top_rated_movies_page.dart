@@ -38,7 +38,12 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final movie = data.movies[index];
-                  return MovieCard(movie);
+                  return ItemCard(
+                    id: movie.id,
+                    title: movie.title,
+                    overview: movie.overview,
+                    posterPath: movie.posterPath,
+                  );
                 },
                 itemCount: data.movies.length,
               );
