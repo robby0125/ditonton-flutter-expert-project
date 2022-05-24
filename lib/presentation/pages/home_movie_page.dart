@@ -8,6 +8,7 @@ import 'package:ditonton/presentation/pages/search_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/zoom_drawer_notifier.dart';
+import 'package:ditonton/presentation/widgets/content_sub_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -65,15 +66,16 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return MovieList(data.nowPlayingMovies);
+                  return _MovieList(data.nowPlayingMovies);
                 } else {
                   return Text('Failed');
                 }
               }),
-              _buildSubHeading(
+              ContentSubHeading(
                 title: 'Popular',
-                onTap: () =>
-                    Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME),
+                onTap: () {
+                  Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME);
+                },
               ),
               Consumer<MovieListNotifier>(builder: (context, data, child) {
                 final state = data.popularMoviesState;
@@ -82,15 +84,16 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return MovieList(data.popularMovies);
+                  return _MovieList(data.popularMovies);
                 } else {
                   return Text('Failed');
                 }
               }),
-              _buildSubHeading(
+              ContentSubHeading(
                 title: 'Top Rated',
-                onTap: () =>
-                    Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME),
+                onTap: () {
+                  Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME);
+                },
               ),
               Consumer<MovieListNotifier>(builder: (context, data, child) {
                 final state = data.topRatedMoviesState;
@@ -99,7 +102,7 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return MovieList(data.topRatedMovies);
+                  return _MovieList(data.topRatedMovies);
                 } else {
                   return Text('Failed');
                 }
@@ -110,36 +113,12 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
       ),
     );
   }
-
-  Row _buildSubHeading({required String title, required Function() onTap}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: kHeading6,
-        ),
-        InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Text('See More'),
-                Icon(Icons.arrow_forward_ios),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }
 
-class MovieList extends StatelessWidget {
+class _MovieList extends StatelessWidget {
   final List<Movie> movies;
 
-  MovieList(this.movies);
+  _MovieList(this.movies);
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +127,8 @@ class MovieList extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          final movie = movies[index];
+          final _movie = movies[index];
+
           return Container(
             padding: const EdgeInsets.all(8),
             child: InkWell(
@@ -156,13 +136,13 @@ class MovieList extends StatelessWidget {
                 Navigator.pushNamed(
                   context,
                   MovieDetailPage.ROUTE_NAME,
-                  arguments: movie.id,
+                  arguments: _movie.id,
                 );
               },
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
                 child: CachedNetworkImage(
-                  imageUrl: '$BASE_IMAGE_URL${movie.posterPath}',
+                  imageUrl: '$BASE_IMAGE_URL${_movie.posterPath}',
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),
                   ),

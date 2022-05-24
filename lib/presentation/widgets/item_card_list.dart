@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:flutter/material.dart';
 
 class ItemCard extends StatelessWidget {
@@ -8,12 +7,14 @@ class ItemCard extends StatelessWidget {
   final String? title;
   final String? overview;
   final String? posterPath;
+  final Function()? onTap;
 
   ItemCard({
     required this.id,
     required this.title,
     required this.overview,
     required this.posterPath,
+    required this.onTap,
   });
 
   @override
@@ -21,13 +22,7 @@ class ItemCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            MovieDetailPage.ROUTE_NAME,
-            arguments: id,
-          );
-        },
+        onTap: onTap,
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [
@@ -38,6 +33,7 @@ class ItemCard extends StatelessWidget {
                   bottom: 8,
                   right: 8,
                 ),
+                width: double.infinity,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

@@ -5,12 +5,15 @@ import 'package:flutter/foundation.dart';
 
 class WatchlistMovieNotifier extends ChangeNotifier {
   var _watchlistMovies = <Movie>[];
+
   List<Movie> get watchlistMovies => _watchlistMovies;
 
   var _watchlistState = RequestState.Empty;
+
   RequestState get watchlistState => _watchlistState;
 
   String _message = '';
+
   String get message => _message;
 
   WatchlistMovieNotifier({required this.getWatchlistMovies});
@@ -29,8 +32,13 @@ class WatchlistMovieNotifier extends ChangeNotifier {
         notifyListeners();
       },
       (moviesData) {
-        _watchlistState = RequestState.Loaded;
-        _watchlistMovies = moviesData;
+        if (moviesData.isNotEmpty) {
+          _watchlistState = RequestState.Loaded;
+          _watchlistMovies = moviesData;
+        } else {
+          _watchlistState = RequestState.Empty;
+        }
+
         notifyListeners();
       },
     );
