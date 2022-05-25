@@ -1,5 +1,6 @@
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 
 class TvModel extends Equatable {
   TvModel({
@@ -19,7 +20,7 @@ class TvModel extends Equatable {
   });
 
   final String? backdropPath;
-  final DateTime firstAirDate;
+  final DateTime? firstAirDate;
   final List<int> genreIds;
   final int id;
   final String name;
@@ -34,7 +35,7 @@ class TvModel extends Equatable {
 
   factory TvModel.fromJson(Map<String, dynamic> json) => TvModel(
         backdropPath: json["backdrop_path"],
-        firstAirDate: DateTime.parse(json["first_air_date"]),
+        firstAirDate: DateTime.tryParse(json["first_air_date"]),
         genreIds: List<int>.from(json["genre_ids"].map((x) => x)),
         id: json["id"],
         name: json["name"],
@@ -50,8 +51,9 @@ class TvModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
         "backdrop_path": backdropPath,
-        "first_air_date":
-            "${firstAirDate.year.toString().padLeft(4, '0')}-${firstAirDate.month.toString().padLeft(2, '0')}-${firstAirDate.day.toString().padLeft(2, '0')}",
+        "first_air_date": firstAirDate == null
+            ? null
+            : DateFormat('yyyy-MM-dd').format(firstAirDate!),
         "genre_ids": List<dynamic>.from(genreIds.map((x) => x)),
         "id": id,
         "name": name,

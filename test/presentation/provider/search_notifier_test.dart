@@ -1,26 +1,32 @@
 import 'package:dartz/dartz.dart';
+import 'package:ditonton/common/content_search_enum.dart';
 import 'package:ditonton/common/failure.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/domain/usecases/search_tv_series.dart';
+import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'movie_search_notifier_test.mocks.dart';
+import 'search_notifier_test.mocks.dart';
 
-@GenerateMocks([SearchMovies])
+@GenerateMocks([SearchMovies, SearchTvSeries])
 void main() {
-  late MovieSearchNotifier provider;
+  late SearchNotifier provider;
   late MockSearchMovies mockSearchMovies;
+  late MockSearchTvSeries mockSearchTvSeries;
   late int listenerCallCount;
 
   setUp(() {
     listenerCallCount = 0;
     mockSearchMovies = MockSearchMovies();
-    provider = MovieSearchNotifier(searchMovies: mockSearchMovies)
-      ..addListener(() {
+    mockSearchTvSeries = MockSearchTvSeries();
+    provider = SearchNotifier(
+      searchMovies: mockSearchMovies,
+      searchTvSeries: mockSearchTvSeries,
+    )..addListener(() {
         listenerCallCount += 1;
       });
   });
@@ -42,6 +48,7 @@ void main() {
     voteCount: 13507,
   );
   final tMovieList = <Movie>[tMovieModel];
+  final tType = ContentSearch.Movie;
   final tQuery = 'spiderman';
 
   group('search movies', () {
@@ -50,9 +57,9 @@ void main() {
       when(mockSearchMovies.execute(tQuery))
           .thenAnswer((_) async => Right(tMovieList));
       // act
-      provider.fetchMovieSearch(tQuery);
+      provider.performSearch(type: tType, query: tQuery);
       // assert
-      expect(provider.state, RequestState.Loading);
+      expect(provider.movieState, RequestState.Loading);
     });
 
     test('should change search result data when data is gotten successfully',
@@ -61,10 +68,10 @@ void main() {
       when(mockSearchMovies.execute(tQuery))
           .thenAnswer((_) async => Right(tMovieList));
       // act
-      await provider.fetchMovieSearch(tQuery);
+      await provider.performSearch(type: tType, query: tQuery);
       // assert
-      expect(provider.state, RequestState.Loaded);
-      expect(provider.searchResult, tMovieList);
+      expect(provider.movieState, RequestState.Loaded);
+      expect(provider.searchMovieResult, tMovieList);
       expect(listenerCallCount, 2);
     });
 
@@ -73,9 +80,9 @@ void main() {
       when(mockSearchMovies.execute(tQuery))
           .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
       // act
-      await provider.fetchMovieSearch(tQuery);
+      await provider.performSearch(type: tType, query: tQuery);
       // assert
-      expect(provider.state, RequestState.Error);
+      expect(provider.movieState, RequestState.Error);
       expect(provider.message, 'Server Failure');
       expect(listenerCallCount, 2);
     });

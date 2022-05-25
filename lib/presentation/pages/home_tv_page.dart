@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
+import 'package:ditonton/common/content_search_enum.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/presentation/pages/popular_tv_series_page.dart';
@@ -42,7 +43,11 @@ class _HomeTvPageState extends State<HomeTvPage> {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, SearchPage.ROUTE_NAME);
+              Navigator.pushNamed(
+                context,
+                SearchPage.ROUTE_NAME,
+                arguments: ContentSearch.TvSeries,
+              );
             },
             icon: Icon(Icons.search),
           )

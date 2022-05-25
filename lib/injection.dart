@@ -22,9 +22,10 @@ import 'package:ditonton/domain/usecases/get_watchlist_status.dart';
 import 'package:ditonton/domain/usecases/remove_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_watchlist.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
+import 'package:ditonton/domain/usecases/search_tv_series.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
+import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_tv_series_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
@@ -59,8 +60,9 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => MovieSearchNotifier(
+    () => SearchNotifier(
       searchMovies: locator(),
+      searchTvSeries: locator(),
     ),
   );
   locator.registerFactory(
@@ -128,6 +130,7 @@ void init() {
   locator.registerLazySingleton(() => GetTvDetail(locator()));
   locator.registerLazySingleton(() => GetTvRecommendation(locator()));
   locator.registerLazySingleton(() => GetTvSeasonDetail(locator()));
+  locator.registerLazySingleton(() => SearchTvSeries(locator()));
 
   // repository
   locator.registerLazySingleton<MovieRepository>(

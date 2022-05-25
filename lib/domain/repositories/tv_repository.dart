@@ -19,4 +19,5 @@ abstract class TvRepository {
     int tvId,
     int seasonNumber,
   );
+  Future<Either<Failure, List<Tv>>> searchTvSeries(String query);
 }
