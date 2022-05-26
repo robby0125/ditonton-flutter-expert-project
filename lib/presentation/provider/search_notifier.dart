@@ -40,13 +40,13 @@ class SearchNotifier extends ChangeNotifier {
     required String query,
   }) async {
     if (type == ContentSearch.Movie) {
-      await fetchMovieSearch(query);
+      await _fetchMovieSearch(query);
     } else {
-      await fetchTvSearch(query);
+      await _fetchTvSearch(query);
     }
   }
 
-  Future<void> fetchMovieSearch(String query) async {
+  Future<void> _fetchMovieSearch(String query) async {
     _movieState = RequestState.Loading;
     notifyListeners();
 
@@ -65,7 +65,7 @@ class SearchNotifier extends ChangeNotifier {
     );
   }
 
-  Future<void> fetchTvSearch(String query) async {
+  Future<void> _fetchTvSearch(String query) async {
     _tvState = RequestState.Loading;
     notifyListeners();
 

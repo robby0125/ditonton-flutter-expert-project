@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
             leading: Icon(Icons.save_alt),
             title: Text('Watchlist'),
             onTap: () {
-              Navigator.pushNamed(context, WatchlistMoviesPage.ROUTE_NAME);
+              Navigator.pushNamed(context, WatchlistPage.ROUTE_NAME);
             },
           ),
           ListTile(

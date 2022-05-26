@@ -5,8 +5,8 @@ import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:ditonton/presentation/pages/tv_season_detail_page.dart';
-import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
+import 'package:ditonton/presentation/provider/tv_season_detail_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +29,9 @@ class _TvDetailPageState extends State<TvDetailPage> {
     Future.microtask(() {
       Provider.of<TvDetailNotifier>(context, listen: false)
           .fetchTvDetail(widget.id);
+
+      Provider.of<TvDetailNotifier>(context, listen: false)
+          .loadWatchlistStatus(widget.id);
     });
   }
 
@@ -47,7 +50,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
               child: _DetailContent(
                 tv,
                 provider.tvRecommendation,
-                false,
+                provider.isAddedToWatchlist,
               ),
             );
           } else {
@@ -109,28 +112,22 @@ class _DetailContent extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
-                                  // await Provider.of<MovieDetailNotifier>(
-                                  //         context,
-                                  //         listen: false)
-                                  //     .addWatchlist(tv);
+                                  await Provider.of<TvDetailNotifier>(context,
+                                          listen: false)
+                                      .addWatchlist(tv);
                                 } else {
-                                  // await Provider.of<MovieDetailNotifier>(
-                                  //         context,
-                                  //         listen: false)
-                                  //     .removeFromWatchlist(tv);
+                                  await Provider.of<TvDetailNotifier>(context,
+                                          listen: false)
+                                      .removeFromWatchlist(tv);
                                 }
 
-                                final message =
-                                    Provider.of<MovieDetailNotifier>(context,
-                                            listen: false)
-                                        .watchlistMessage;
+                                final message = Provider.of<TvDetailNotifier>(
+                                        context,
+                                        listen: false)
+                                    .watchlistMessage;
 
-                                if (message ==
-                                        MovieDetailNotifier
-                                            .watchlistAddSuccessMessage ||
-                                    message ==
-                                        MovieDetailNotifier
-                                            .watchlistRemoveSuccessMessage) {
+                                if (message == watchlistAddSuccessMessage ||
+                                    message == watchlistRemoveSuccessMessage) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(message)));
                                 } else {
@@ -199,6 +196,11 @@ class _DetailContent extends StatelessWidget {
                                         padding: const EdgeInsets.all(4.0),
                                         child: InkWell(
                                           onTap: () {
+                                            Provider.of<TvSeasonDetailNotifier>(
+                                                    context,
+                                                    listen: false)
+                                                .expandEpisodePanel(-1);
+
                                             Navigator.pushNamed(
                                               context,
                                               TvSeasonDetailPage.ROUTE_NAME,

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:ditonton/domain/entities/tv_episode.dart';
 import 'package:ditonton/domain/entities/tv_season_detail.dart';
 import 'package:ditonton/presentation/provider/tv_season_detail_notifier.dart';
@@ -77,53 +78,20 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                           ),
                           child: Stack(
                             children: [
-                              Container(
-                                margin: const EdgeInsets.only(top: 16),
-                                child: SingleChildScrollView(
-                                  controller: scrollController,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _tv.name,
-                                        style: kSubtitle,
-                                      ),
-                                      Text(
-                                        _season.name,
-                                        style: kHeading5,
-                                      ),
-                                      Text(
-                                        '(${_season.airDate.year})',
-                                        style: kSubtitle.copyWith(
-                                          color: kDavysGrey,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(
-                                        'Overview',
-                                        style: kHeading6,
-                                      ),
-                                      Text(
-                                        _season.overview.isNotEmpty
-                                            ? _season.overview
-                                            : 'No overview',
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(
-                                        'Episodes',
-                                        style: kHeading6,
-                                      ),
-                                      SizedBox(height: 8),
-                                      _buildEpisodeList(
-                                        season: _season,
-                                        seasonProvider: provider,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
+                              Builder(builder: (_) {
+                                if (_season.airDate == null) {
+                                  return Center(
+                                    child: Text('Cooming Soon!'),
+                                  );
+                                } else {
+                                  return _buildSeasonInfo(
+                                    scrollController: scrollController,
+                                    tv: _tv,
+                                    season: _season,
+                                    provider: provider,
+                                  );
+                                }
+                              }),
                               Align(
                                 alignment: Alignment.topCenter,
                                 child: Container(
@@ -161,6 +129,58 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
             return Text(provider.message);
           }
         },
+      ),
+    );
+  }
+
+  Container _buildSeasonInfo({
+    required ScrollController scrollController,
+    required TvDetail tv,
+    required TvSeasonDetail season,
+    required TvSeasonDetailNotifier provider,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              tv.name,
+              style: kSubtitle,
+            ),
+            Text(
+              season.name,
+              style: kHeading5,
+            ),
+            Text(
+              '(${season.airDate!.year})',
+              style: kSubtitle.copyWith(
+                color: kDavysGrey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Overview',
+              style: kHeading6,
+            ),
+            Text(
+              season.overview.isNotEmpty ? season.overview : 'No overview',
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Episodes',
+              style: kHeading6,
+            ),
+            SizedBox(height: 8),
+            _buildEpisodeList(
+              season: season,
+              seasonProvider: provider,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -218,47 +238,83 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Row(
+                  //   crossAxisAlignment: CrossAxisAlignment.start,
+                  //   children: [
+                  //     ClipRRect(
+                  //       borderRadius: BorderRadius.all(Radius.circular(8)),
+                  //       child: CachedNetworkImage(
+                  //         imageUrl: '$BASE_IMAGE_URL${episode.stillPath}',
+                  //         placeholder: (_, __) => Center(
+                  //           child: CircularProgressIndicator(),
+                  //         ),
+                  //         width: 100,
+                  //         height: 150,
+                  //         fit: BoxFit.cover,
+                  //       ),
+                  //     ),
+                  //     SizedBox(width: 8),
+                  //     Flexible(
+                  //       child: Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Text(
+                  //             episode.name,
+                  //             style: kSubtitle.copyWith(
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //           Text(showDuration(episode.runtime)),
+                  //           Row(
+                  //             children: [
+                  //               RatingBarIndicator(
+                  //                 rating: episode.voteAverage / 2,
+                  //                 itemCount: 5,
+                  //                 itemBuilder: (context, index) => Icon(
+                  //                   Icons.star,
+                  //                   color: kMikadoYellow,
+                  //                 ),
+                  //                 itemSize: 24,
+                  //               ),
+                  //               Text(episode.voteAverage.toString())
+                  //             ],
+                  //           ),
+                  //         ],
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
+                  ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                    child: CachedNetworkImage(
+                      imageUrl: '$BASE_IMAGE_URL${episode.stillPath}',
+                      placeholder: (_, __) => Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    episode.name,
+                    style: kSubtitle.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(showDuration(episode.runtime)),
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl: '$BASE_IMAGE_URL${episode.stillPath}',
-                        placeholder: (_, __) => Center(
-                          child: CircularProgressIndicator(),
+                      RatingBarIndicator(
+                        rating: episode.voteAverage / 2,
+                        itemCount: 5,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: kMikadoYellow,
                         ),
-                        width: 100,
-                        height: 150,
-                        fit: BoxFit.cover,
+                        itemSize: 24,
                       ),
-                      SizedBox(width: 8),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              episode.name,
-                              style: kSubtitle.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(showDuration(episode.runtime)),
-                            Row(
-                              children: [
-                                RatingBarIndicator(
-                                  rating: episode.voteAverage / 2,
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) => Icon(
-                                    Icons.star,
-                                    color: kMikadoYellow,
-                                  ),
-                                  itemSize: 24,
-                                ),
-                                Text(episode.voteAverage.toString())
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      Text(episode.voteAverage.toString())
                     ],
                   ),
                   SizedBox(height: 16),
