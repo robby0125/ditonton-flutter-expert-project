@@ -23,10 +23,10 @@ void main() {
           .thenAnswer((_) async => 1);
 
       // act
-      final _result = await dataSource.insertWatchlist(testTvTable);
+      final result = await dataSource.insertWatchlist(testTvTable);
 
       // assert
-      expect(_result, 'Added to Watchlist');
+      expect(result, 'Added to Watchlist');
     });
 
     test('should throw DatabaseException when insert to database is failed',
@@ -36,10 +36,10 @@ void main() {
           .thenThrow(Exception());
 
       // act
-      final _call = dataSource.insertWatchlist(testTvTable);
+      final call = dataSource.insertWatchlist(testTvTable);
 
       // assert
-      expect(() => _call, throwsA(isA<DatabaseException>()));
+      expect(() => call, throwsA(isA<DatabaseException>()));
     });
   });
 
@@ -51,10 +51,10 @@ void main() {
           .thenAnswer((_) async => 1);
 
       // act
-      final _result = await dataSource.removeWatchlist(testTvTable);
+      final result = await dataSource.removeWatchlist(testTvTable);
 
       // assert
-      expect(_result, 'Removed from Watchlist');
+      expect(result, 'Removed from Watchlist');
     });
 
     test('should throw DatabaseException when remove from database is failed',
@@ -64,37 +64,37 @@ void main() {
           .thenThrow(Exception());
 
       // act
-      final _call = dataSource.removeWatchlist(testTvTable);
+      final call = dataSource.removeWatchlist(testTvTable);
 
       // assert
-      expect(() => _call, throwsA(isA<DatabaseException>()));
+      expect(() => call, throwsA(isA<DatabaseException>()));
     });
   });
 
   group('get tv detail by id', () {
-    final _tId = 1;
+    final tId = 1;
 
     test('should return Tv Detail Table when data is found', () async {
       // arrange
-      when(mockDatabaseHelper.getTvById(_tId))
+      when(mockDatabaseHelper.getTvById(tId))
           .thenAnswer((_) async => testTvMap);
 
       // act
-      final _result = await dataSource.getTvById(_tId);
+      final result = await dataSource.getTvById(tId);
 
       // assert
-      expect(_result, testTvTable);
+      expect(result, testTvTable);
     });
 
     test('should return null when data is not found', () async {
       // arrange
-      when(mockDatabaseHelper.getTvById(_tId)).thenAnswer((_) async => null);
+      when(mockDatabaseHelper.getTvById(tId)).thenAnswer((_) async => null);
 
       // act
-      final _result = await dataSource.getTvById(_tId);
+      final result = await dataSource.getTvById(tId);
 
       // assert
-      expect(_result, null);
+      expect(result, null);
     });
   });
 }

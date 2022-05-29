@@ -97,4 +97,29 @@ void main() {
       expect(result, [testMovieTable]);
     });
   });
+
+  group('cache now playing movies', () {
+    test('should call database helper to save data', () async {
+      // arrange
+      when(mockDatabaseHelper.clearCache('now playing')).thenAnswer((_) async => 1);
+
+      // act
+      await dataSource.cacheNowPlayingMovies([testMovieCache]);
+
+      // assert
+      verify(mockDatabaseHelper.clearCache('now playing'));
+      verify(mockDatabaseHelper.insertCacheTransaction([testMovieCache], 'now playing'));
+    });
+    
+    test('should return list of movies from db when data exist', () async {
+      // arrange
+      when(mockDatabaseHelper.getCacheMovies('now playing')).thenAnswer((_) async => [testMovieCacheMap]);
+
+      // act
+      final result = await dataSource.getCachedNowPlayingMovies();
+
+      // assert
+      expect(result, [testMovieCache]);
+    });
+  });
 }
