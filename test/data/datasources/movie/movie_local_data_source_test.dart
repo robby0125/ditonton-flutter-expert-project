@@ -101,25 +101,114 @@ void main() {
   group('cache now playing movies', () {
     test('should call database helper to save data', () async {
       // arrange
-      when(mockDatabaseHelper.clearCache('now playing')).thenAnswer((_) async => 1);
+      when(mockDatabaseHelper.clearMoviesCache('now playing'))
+          .thenAnswer((_) async => 1);
 
       // act
       await dataSource.cacheNowPlayingMovies([testMovieCache]);
 
       // assert
-      verify(mockDatabaseHelper.clearCache('now playing'));
-      verify(mockDatabaseHelper.insertCacheTransaction([testMovieCache], 'now playing'));
+      verify(mockDatabaseHelper.clearMoviesCache('now playing'));
+      verify(mockDatabaseHelper
+          .insertMovieCacheTransaction([testMovieCache], 'now playing'));
     });
-    
+
     test('should return list of movies from db when data exist', () async {
       // arrange
-      when(mockDatabaseHelper.getCacheMovies('now playing')).thenAnswer((_) async => [testMovieCacheMap]);
+      when(mockDatabaseHelper.getCacheMovies('now playing'))
+          .thenAnswer((_) async => [testMovieCacheMap]);
 
       // act
       final result = await dataSource.getCachedNowPlayingMovies();
 
       // assert
       expect(result, [testMovieCache]);
+    });
+
+    test('should throw CacheException when data is empty', () async {
+      // arrange
+      when(mockDatabaseHelper.getCacheMovies('now playing')).thenAnswer((_) async => []);
+
+      // act
+      final call = dataSource.getCachedNowPlayingMovies();
+
+      // assert
+      expect(call, throwsA(isA<CacheException>()));
+    });
+  });
+
+  group('cache popular movies', () {
+    test('should call database helper to save data', () async {
+      // arrange
+      when(mockDatabaseHelper.clearMoviesCache('popular'))
+          .thenAnswer((_) async => 1);
+
+      // act
+      await dataSource.cachePopularMovies([testMovieCache]);
+
+      // assert
+      verify(mockDatabaseHelper.clearMoviesCache('popular'));
+      verify(mockDatabaseHelper
+          .insertMovieCacheTransaction([testMovieCache], 'popular'));
+    });
+
+    test('should return list of movies from db when data exist', () async {
+      // arrange
+      when(mockDatabaseHelper.getCacheMovies('popular'))
+          .thenAnswer((_) async => [testMovieCacheMap]);
+
+      // act
+      final result = await dataSource.getCachedPopularMovies();
+
+      // assert
+      expect(result, [testMovieCache]);
+    });
+
+    test('should throw CacheException when data is empty', () async {
+      // arrange
+      when(mockDatabaseHelper.getCacheMovies('popular')).thenAnswer((_) async => []);
+
+      // act
+      final call = dataSource.getCachedPopularMovies();
+
+      // assert
+      expect(call, throwsA(isA<CacheException>()));
+    });
+  });
+
+  group('cache top rated movies', () {
+    test('should call database helper to save data', () async {
+      // arrange
+      when(mockDatabaseHelper.clearMoviesCache('top rated')).thenAnswer((_)async => 1);
+
+      // act
+      await dataSource.cacheTopRatedMovies([testMovieCache]);
+
+      // assert
+      verify(mockDatabaseHelper.clearMoviesCache('top rated'));
+      verify(mockDatabaseHelper.insertMovieCacheTransaction([testMovieCache], 'top rated'));
+    });
+
+    test('should return list of movies from db when data exist', () async {
+      // arrange
+      when(mockDatabaseHelper.getCacheMovies('top rated')).thenAnswer((_) async => [testMovieCacheMap]);
+
+      // act
+      final result = await dataSource.getCachedTopRatedMovies();
+
+      // assert
+      expect(result, [testMovieCache]);
+    });
+
+    test('should throw CacheException when data is empty', () async {
+      // arrange
+      when(mockDatabaseHelper.getCacheMovies('top rated')).thenAnswer((_) async => []);
+
+      // act
+      final call = dataSource.getCachedTopRatedMovies();
+
+      // assert
+      expect(call, throwsA(isA<CacheException>()));
     });
   });
 }

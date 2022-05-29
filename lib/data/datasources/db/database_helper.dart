@@ -24,7 +24,8 @@ class DatabaseHelper {
 
   static const String _tblMovieWatchlist = 'movie_watchlist';
   static const String _tblTvWatchlist = 'tv_watchlist';
-  static const String _tblCache = 'cache';
+  static const String _tblMovieCache = 'cache_movie';
+  static const String _tblTvCache = 'cache_tv';
 
   Future<Database> _initDb() async {
     final path = await getDatabasesPath();
@@ -54,9 +55,20 @@ class DatabaseHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE  $_tblCache (
+      CREATE TABLE  $_tblMovieCache (
         id INTEGER,
         title TEXT,
+        overview TEXT,
+        posterPath TEXT,
+        category TEXT,
+        PRIMARY KEY (id, category)
+      );
+    ''');
+
+    await db.execute('''
+      CREATE TABLE  $_tblTvCache (
+        id INTEGER,
+        name TEXT,
         overview TEXT,
         posterPath TEXT,
         category TEXT,
@@ -71,8 +83,8 @@ class DatabaseHelper {
   }
 
   Future<int> insertTvWatchlist(TvTable tv) async {
-    final _db = await database;
-    return await _db!.insert(_tblTvWatchlist, tv.toJson());
+    final db = await database;
+    return await db!.insert(_tblTvWatchlist, tv.toJson());
   }
 
   Future<int> removeMovieWatchlist(MovieTable movie) async {
@@ -85,8 +97,8 @@ class DatabaseHelper {
   }
 
   Future<int> removeTvWatchlist(TvTable tv) async {
-    final _db = await database;
-    return await _db!.delete(
+    final db = await database;
+    return await db!.delete(
       _tblTvWatchlist,
       where: 'id = ?',
       whereArgs: [tv.id],
@@ -109,15 +121,15 @@ class DatabaseHelper {
   }
 
   Future<Map<String, dynamic>?> getTvById(int id) async {
-    final _db = await database;
-    final _results = await _db!.query(
+    final db = await database;
+    final results = await db!.query(
       _tblTvWatchlist,
       where: 'id = ?',
       whereArgs: [id],
     );
 
-    if (_results.isNotEmpty) {
-      return _results.first;
+    if (results.isNotEmpty) {
+      return results.first;
     } else {
       return null;
     }
@@ -132,20 +144,32 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> getWatchlistTvSeries() async {
-    final _db = await database;
-    final _results = await _db!.query(_tblTvWatchlist);
+    final db = await database;
+    final results = await db!.query(_tblTvWatchlist);
 
-    return _results;
+    return results;
   }
 
-  Future<void> insertCacheTransaction(
+  Future<void> insertMovieCacheTransaction(
       List<MovieTable> movies, String category) async {
     final db = await database;
     db!.transaction((txn) async {
       for (final movie in movies) {
         final movieJson = movie.toJson();
         movieJson['category'] = category;
-        txn.insert(_tblCache, movieJson);
+        txn.insert(_tblMovieCache, movieJson);
+      }
+    });
+  }
+
+  Future<void> insertTvCacheTransaction(
+      List<TvTable> tvSeries, String category) async {
+    final db = await database;
+    db!.transaction((txn) async {
+      for (final tv in tvSeries) {
+        final tvJson = tv.toJson();
+        tvJson['category'] = category;
+        txn.insert(_tblTvCache, tvJson);
       }
     });
   }
@@ -153,7 +177,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> getCacheMovies(String category) async {
     final db = await database;
     final results = await db!.query(
-      _tblCache,
+      _tblMovieCache,
       where: 'category = ?',
       whereArgs: [category],
     );
@@ -161,10 +185,30 @@ class DatabaseHelper {
     return results;
   }
 
-  Future<int> clearCache(String category) async {
+  Future<List<Map<String, dynamic>>> getCacheTvSeries(String category) async {
+    final db = await database;
+    final result = db!.query(
+      _tblTvCache,
+      where: 'category = ?',
+      whereArgs: [category],
+    );
+
+    return result;
+  }
+
+  Future<int> clearMoviesCache(String category) async {
     final db = await database;
     return await db!.delete(
-      _tblCache,
+      _tblMovieCache,
+      where: 'category = ?',
+      whereArgs: [category],
+    );
+  }
+
+  Future<int> clearTvSeriesCache(String category) async {
+    final db = await database;
+    return await db!.delete(
+      _tblTvCache,
       where: 'category = ?',
       whereArgs: [category],
     );

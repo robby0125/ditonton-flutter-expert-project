@@ -52,6 +52,21 @@ class TvDetailResponse extends Equatable {
         voteCount: json['vote_count'],
       );
 
+  Map<String, dynamic> toJson() => {
+        'first_air_date': firstAirDate,
+        'genres': List<dynamic>.from(genres.map((x) => x.toJson())),
+        'id': id,
+        'name': name,
+        'number_of_seasons': numberOfSeasons,
+        'overview': overview,
+        'popularity': popularity,
+        'poster_path': posterPath,
+        'seasons': List<dynamic>.from(seasons.map((e) => e.toJson())),
+        'status': status,
+        'vote_average': voteAverage,
+        'vote_count': voteCount,
+      };
+
   TvDetail toEntity() => TvDetail(
         firstAirDate: this.firstAirDate,
         genres: this.genres.map((e) => e.toEntity()).toList(),

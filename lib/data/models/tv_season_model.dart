@@ -53,5 +53,13 @@ class TvSeasonModel extends Equatable {
       );
 
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [
+        airDate,
+        episodeCount,
+        id,
+        name,
+        overview,
+        posterPath,
+        seasonNumber,
+      ];
 }

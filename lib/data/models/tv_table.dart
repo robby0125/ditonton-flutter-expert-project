@@ -1,3 +1,4 @@
+import 'package:ditonton/data/models/tv_model.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:equatable/equatable.dart';
@@ -27,6 +28,13 @@ class TvTable extends Equatable {
         name: map['name'],
         posterPath: map['posterPath'],
         overview: map['overview'],
+      );
+
+  factory TvTable.fromDTO(TvModel tv) => TvTable(
+        id: tv.id,
+        name: tv.name,
+        posterPath: tv.posterPath,
+        overview: tv.overview,
       );
 
   Map<String, dynamic> toJson() => {

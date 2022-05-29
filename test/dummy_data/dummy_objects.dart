@@ -3,6 +3,7 @@ import 'package:ditonton/data/models/tv_table.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
+import 'package:ditonton/domain/entities/tv.dart';
 
 final testMovie = Movie(
   adult: false,
@@ -52,6 +53,13 @@ final testMovieTable = MovieTable(
   overview: 'overview',
 );
 
+final testMovieMap = {
+  'id': 1,
+  'overview': 'overview',
+  'posterPath': 'posterPath',
+  'title': 'title',
+};
+
 final testMovieCache = MovieTable(
   id: 557,
   overview:
@@ -63,7 +71,7 @@ final testMovieCache = MovieTable(
 final testMovieFromCache = Movie.watchlist(
   id: 557,
   overview:
-  'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
+      'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
   posterPath: '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
   title: 'Spider-Man',
 );
@@ -71,7 +79,7 @@ final testMovieFromCache = Movie.watchlist(
 final testMovieCacheMap = {
   'id': 557,
   'overview':
-  'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
+      'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
   'posterPath': '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
   'title': 'Spider-Man',
 };
@@ -83,16 +91,33 @@ final testTvTable = TvTable(
   overview: 'overview',
 );
 
-final testMovieMap = {
-  'id': 1,
-  'overview': 'overview',
-  'posterPath': 'posterPath',
-  'title': 'title',
-};
-
 final testTvMap = {
   'id': 1,
   'name': 'name',
   'posterPath': 'posterPath',
   'overview': 'overview',
+};
+
+final testTvCache = TvTable(
+  id: 52814,
+  name: 'Halo',
+  posterPath: '/eO0QV5qJaEngP1Ax9w3eV6bJG2f.jpg',
+  overview:
+      'Depicting an epic 26th-century conflict between humanity and an alien threat known as the Covenant, the series weaves deeply drawn personal stories with action, adventure and a richly imagined vision of the future.',
+);
+
+final testTvFromCache = Tv.watchList(
+  id: 52814,
+  name: 'Halo',
+  posterPath: '/eO0QV5qJaEngP1Ax9w3eV6bJG2f.jpg',
+  overview:
+      'Depicting an epic 26th-century conflict between humanity and an alien threat known as the Covenant, the series weaves deeply drawn personal stories with action, adventure and a richly imagined vision of the future.',
+);
+
+final testTvCacheMap = {
+  'id': 52814,
+  'name': 'Halo',
+  'posterPath': '/eO0QV5qJaEngP1Ax9w3eV6bJG2f.jpg',
+  'overview':
+      'Depicting an epic 26th-century conflict between humanity and an alien threat known as the Covenant, the series weaves deeply drawn personal stories with action, adventure and a richly imagined vision of the future.',
 };
