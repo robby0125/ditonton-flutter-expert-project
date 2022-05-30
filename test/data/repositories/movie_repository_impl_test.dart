@@ -69,12 +69,9 @@ void main() {
   final tMovieList = <Movie>[tMovie];
 
   group('Now Playing Movies', () {
-    setUp(() {
-      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-    });
-
     test('should check if device is online', () async {
       // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockRemoteDataSource.getNowPlayingMovies())
           .thenAnswer((_) async => []);
 
@@ -293,9 +290,12 @@ void main() {
         expect(resultList, tMovieList);
       });
 
-      test('should cache data locally when the call remote data source is successful', () async {
+      test(
+          'should cache data locally when the call remote data source is successful',
+          () async {
         // arrange
-        when(mockRemoteDataSource.getTopRatedMovies()).thenAnswer((_) async => tMovieModelList);
+        when(mockRemoteDataSource.getTopRatedMovies())
+            .thenAnswer((_) async => tMovieModelList);
 
         // act
         await repository.getTopRatedMovies();
@@ -325,7 +325,8 @@ void main() {
 
       test('should return cache data when device offline', () async {
         // arrange
-        when(mockLocalDataSource.getCachedTopRatedMovies()).thenAnswer((_) async => [testMovieCache]);
+        when(mockLocalDataSource.getCachedTopRatedMovies())
+            .thenAnswer((_) async => [testMovieCache]);
 
         // act
         final result = await repository.getTopRatedMovies();
@@ -338,7 +339,8 @@ void main() {
 
       test('should return CacheFailure when app has no cache', () async {
         // arrange
-        when(mockLocalDataSource.getCachedTopRatedMovies()).thenThrow(CacheException('no cache'));
+        when(mockLocalDataSource.getCachedTopRatedMovies())
+            .thenThrow(CacheException('no cache'));
 
         // act
         final result = await repository.getTopRatedMovies();

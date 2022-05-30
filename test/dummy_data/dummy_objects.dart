@@ -4,6 +4,10 @@ import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/domain/entities/tv_detail.dart';
+import 'package:ditonton/domain/entities/tv_episode.dart';
+import 'package:ditonton/domain/entities/tv_season.dart';
+import 'package:ditonton/domain/entities/tv_season_detail.dart';
 
 final testMovie = Movie(
   adult: false,
@@ -87,14 +91,14 @@ final testMovieCacheMap = {
 final testTvTable = TvTable(
   id: 1,
   name: 'name',
-  posterPath: 'posterPath',
+  posterPath: '/path.jpg',
   overview: 'overview',
 );
 
 final testTvMap = {
   'id': 1,
   'name': 'name',
-  'posterPath': 'posterPath',
+  'posterPath': '/path.jpg',
   'overview': 'overview',
 };
 
@@ -121,3 +125,59 @@ final testTvCacheMap = {
   'overview':
       'Depicting an epic 26th-century conflict between humanity and an alien threat known as the Covenant, the series weaves deeply drawn personal stories with action, adventure and a richly imagined vision of the future.',
 };
+
+final testTvDetail = TvDetail(
+  firstAirDate: DateTime.parse('2001-01-01'),
+  genres: [Genre(id: 1, name: 'Comedy')],
+  id: 1,
+  name: 'name',
+  numberOfSeasons: 1,
+  overview: 'overview',
+  popularity: 10,
+  posterPath: '/path.jpg',
+  seasons: [
+    TvSeason(
+      airDate: DateTime.tryParse('2001-01-01'),
+      episodeCount: 1,
+      id: 1,
+      name: 'name',
+      overview: 'overview',
+      posterPath: '/path.jpg',
+      seasonNumber: 1,
+    ),
+  ],
+  status: 'status',
+  voteAverage: 1,
+  voteCount: 1,
+);
+
+final testSeasonDetail = TvSeasonDetail(
+  id: '1',
+  airDate: DateTime.tryParse('2001-01-01'),
+  episodes: [
+    TvEpisode(
+      airDate: DateTime.tryParse('2001-01-01'),
+      episodeNumber: 1,
+      id: 1,
+      name: 'name',
+      overview: 'overview',
+      runtime: 1,
+      seasonNumber: 1,
+      stillPath: '/path.jpg',
+      voteAverage: 1,
+      voteCount: 1,
+    ),
+  ],
+  name: 'name',
+  overview: 'overview',
+  tvEpisodeId: 1,
+  posterPath: '/path.jpg',
+  seasonNumber: 1,
+);
+
+final testTvWatchlist = Tv.watchList(
+  id: 1,
+  name: 'name',
+  posterPath: '/path.jpg',
+  overview: 'overview',
+);
