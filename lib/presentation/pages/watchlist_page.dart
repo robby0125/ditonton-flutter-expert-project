@@ -51,8 +51,14 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
           title: Text('Watchlist'),
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Movies'),
-              Tab(text: 'TV Series'),
+              Tab(
+                key: Key('movie_tab'),
+                text: 'Movies',
+              ),
+              Tab(
+                key: Key('tv_tab'),
+                text: 'TV Series',
+              ),
             ],
           ),
         ),
@@ -77,9 +83,11 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
             );
           } else if (data.watchlistState == RequestState.Loaded) {
             return ListView.builder(
+              key: Key('movie_watchlist_listview'),
               itemBuilder: (context, index) {
                 final movie = data.watchlistMovies[index];
                 return ItemCard(
+                  key: Key('movie_$index'),
                   id: movie.id,
                   title: movie.title,
                   overview: movie.overview,
@@ -117,9 +125,11 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
             );
           } else if (data.watchlistState == RequestState.Loaded) {
             return ListView.builder(
+              key: Key('tv_watchlist_listview'),
               itemBuilder: (context, index) {
                 final tv = data.watchlistTvSeries[index];
                 return ItemCard(
+                  key: Key('tv_$index'),
                   id: tv.id,
                   title: tv.name,
                   overview: tv.overview,
@@ -138,7 +148,7 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
           } else {
             return _buildErrorMessage(
               message: data.message,
-              alternateMessage: 'Empty Tv Watchlist',
+              alternateMessage: 'Empty TV Watchlist',
             );
           }
         },

@@ -107,6 +107,7 @@ class _DetailContent extends StatelessWidget {
                               style: kHeading5,
                             ),
                             ElevatedButton(
+                              key: Key('watchlist_button'),
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
                                   await Provider.of<MovieDetailNotifier>(
@@ -187,13 +188,19 @@ class _DetailContent extends StatelessWidget {
                                 if (data.recommendationState ==
                                     RequestState.Loading) {
                                   return Center(
-                                    child: CircularProgressIndicator(),
+                                    child: CircularProgressIndicator(
+                                      key: Key('recommendation_progress'),
+                                    ),
                                   );
                                 } else if (data.recommendationState ==
                                     RequestState.Error) {
-                                  return Text(data.message);
+                                  return Text(
+                                    data.message,
+                                    key: Key('recommendation_error'),
+                                  );
                                 } else if (data.recommendationState ==
-                                    RequestState.Loaded) {
+                                        RequestState.Loaded &&
+                                    data.movieRecommendations.isNotEmpty) {
                                   return Container(
                                     height: 150,
                                     child: ListView.builder(
@@ -203,6 +210,7 @@ class _DetailContent extends StatelessWidget {
                                         return Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: InkWell(
+                                            key: Key('recommendation_button'),
                                             onTap: () {
                                               Navigator.pushReplacementNamed(
                                                 context,
@@ -234,7 +242,7 @@ class _DetailContent extends StatelessWidget {
                                     ),
                                   );
                                 } else {
-                                  return Container();
+                                  return Text('No Recommendation');
                                 }
                               },
                             ),
@@ -265,6 +273,7 @@ class _DetailContent extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
+              key: Key('back_button'),
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);

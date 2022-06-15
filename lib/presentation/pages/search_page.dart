@@ -27,6 +27,7 @@ class SearchPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
+              key: Key('query_field'),
               onSubmitted: (query) {
                 Provider.of<SearchNotifier>(context, listen: false)
                     .performSearch(type: type, query: query);
@@ -60,6 +61,7 @@ class SearchPage extends StatelessWidget {
 
                   return Expanded(
                     child: ListView.builder(
+                      key: Key('result_list'),
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
                         int _id = 0;

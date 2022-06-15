@@ -34,6 +34,7 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          key: Key('drawer_button'),
           onPressed: () {
             Provider.of<ZoomDrawerNotifier>(context, listen: false)
                 .toggleDrawer();
@@ -71,12 +72,16 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return _MovieList(data.nowPlayingMovies);
+                  return _MovieList(
+                    keySection: 'now_playing',
+                    movies: data.nowPlayingMovies,
+                  );
                 } else {
                   return Text('Failed');
                 }
               }),
               ContentSubHeading(
+                key: Key('popular_heading'),
                 title: 'Popular',
                 onTap: () {
                   Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME);
@@ -89,12 +94,16 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return _MovieList(data.popularMovies);
+                  return _MovieList(
+                    keySection: 'popular',
+                    movies: data.popularMovies,
+                  );
                 } else {
                   return Text('Failed');
                 }
               }),
               ContentSubHeading(
+                key: Key('top_rated_heading'),
                 title: 'Top Rated',
                 onTap: () {
                   Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME);
@@ -107,7 +116,10 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return _MovieList(data.topRatedMovies);
+                  return _MovieList(
+                    keySection: 'top_rated',
+                    movies: data.topRatedMovies,
+                  );
                 } else {
                   return Text('Failed');
                 }
@@ -121,9 +133,13 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
 }
 
 class _MovieList extends StatelessWidget {
+  final String keySection;
   final List<Movie> movies;
 
-  _MovieList(this.movies);
+  _MovieList({
+    required this.keySection,
+    required this.movies,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -137,6 +153,7 @@ class _MovieList extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(8),
             child: InkWell(
+              key: Key('${keySection}_$index'),
               onTap: () {
                 Navigator.pushNamed(
                   context,

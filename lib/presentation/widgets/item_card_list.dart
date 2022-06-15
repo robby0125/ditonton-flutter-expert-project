@@ -3,6 +3,7 @@ import 'package:ditonton/common/constants.dart';
 import 'package:flutter/material.dart';
 
 class ItemCard extends StatelessWidget {
+  final Key? key;
   final int id;
   final String? title;
   final String? overview;
@@ -10,6 +11,7 @@ class ItemCard extends StatelessWidget {
   final Function()? onTap;
 
   ItemCard({
+    this.key,
     required this.id,
     required this.title,
     required this.overview,

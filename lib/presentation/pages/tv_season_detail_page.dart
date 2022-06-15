@@ -31,7 +31,8 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
     super.initState();
     Future.microtask(() {
       Provider.of<TvSeasonDetailNotifier>(context, listen: false)
-          .fetchTvSeasonDetail(widget.tvId, widget.seasonNumber);
+        ..fetchTvSeasonDetail(widget.tvId, widget.seasonNumber)
+        ..expandEpisodePanel(-1);
     });
   }
 
@@ -81,7 +82,7 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                               Builder(builder: (_) {
                                 if (_season.airDate == null) {
                                   return Center(
-                                    child: Text('Cooming Soon!'),
+                                    child: Text('Coming Soon!'),
                                   );
                                 } else {
                                   return _buildSeasonInfo(
@@ -153,6 +154,7 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
             Text(
               season.name,
               style: kHeading5,
+              key: Key('season_name'),
             ),
             Text(
               '(${season.airDate!.year})',
@@ -222,6 +224,7 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
             alignment: Alignment.centerLeft,
             child: Text(
               'Episode $numEpisode',
+              key: Key('episode_panel_$numEpisode'),
             ),
           ),
         );
@@ -238,52 +241,6 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Row(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     ClipRRect(
-                  //       borderRadius: BorderRadius.all(Radius.circular(8)),
-                  //       child: CachedNetworkImage(
-                  //         imageUrl: '$BASE_IMAGE_URL${episode.stillPath}',
-                  //         placeholder: (_, __) => Center(
-                  //           child: CircularProgressIndicator(),
-                  //         ),
-                  //         width: 100,
-                  //         height: 150,
-                  //         fit: BoxFit.cover,
-                  //       ),
-                  //     ),
-                  //     SizedBox(width: 8),
-                  //     Flexible(
-                  //       child: Column(
-                  //         crossAxisAlignment: CrossAxisAlignment.start,
-                  //         children: [
-                  //           Text(
-                  //             episode.name,
-                  //             style: kSubtitle.copyWith(
-                  //               fontWeight: FontWeight.bold,
-                  //             ),
-                  //           ),
-                  //           Text(showDuration(episode.runtime)),
-                  //           Row(
-                  //             children: [
-                  //               RatingBarIndicator(
-                  //                 rating: episode.voteAverage / 2,
-                  //                 itemCount: 5,
-                  //                 itemBuilder: (context, index) => Icon(
-                  //                   Icons.star,
-                  //                   color: kMikadoYellow,
-                  //                 ),
-                  //                 itemSize: 24,
-                  //               ),
-                  //               Text(episode.voteAverage.toString())
-                  //             ],
-                  //           ),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                     child: CachedNetworkImage(
@@ -301,6 +258,7 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                     style: kSubtitle.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
+                    key: Key('episode_name'),
                   ),
                   Text(showDuration(episode.runtime)),
                   Row(

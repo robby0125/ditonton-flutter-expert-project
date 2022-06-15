@@ -38,6 +38,18 @@ void main() {
     expect(listenerCallCount, 2);
   });
 
+  test('should change state to Empty when data is empty', () async {
+    // arrange
+    when(mockGetWatchlistMovies.execute()).thenAnswer((_) async => Right([]));
+
+    // act
+    await provider.fetchWatchlistMovies();
+
+    // assert
+    expect(provider.watchlistState, RequestState.Empty);
+    expect(listenerCallCount, 2);
+  });
+
   test('should return error when data is unsuccessful', () async {
     // arrange
     when(mockGetWatchlistMovies.execute())

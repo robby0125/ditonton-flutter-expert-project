@@ -6,8 +6,9 @@ import 'package:ditonton/data/datasources/tv/tv_local_data_source.dart';
 import 'package:ditonton/data/datasources/tv/tv_remote_data_source.dart';
 import 'package:ditonton/domain/repositories/movie_repository.dart';
 import 'package:ditonton/domain/repositories/tv_repository.dart';
-import 'package:mockito/annotations.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:mockito/annotations.dart';
 
 @GenerateMocks([
   MovieRepository,
@@ -19,6 +20,7 @@ import 'package:http/http.dart' as http;
   DatabaseHelper,
   NetworkInfo,
 ], customMocks: [
-  MockSpec<http.Client>(as: #MockHttpClient)
+  MockSpec<http.Client>(as: #MockHttpClient),
+  MockSpec<RouteObserver<ModalRoute>>(returnNullOnMissingStub: true),
 ])
 void main() {}

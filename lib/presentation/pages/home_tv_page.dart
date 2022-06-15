@@ -33,6 +33,7 @@ class _HomeTvPageState extends State<HomeTvPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
+          key: Key('drawer_button'),
           onPressed: () {
             Provider.of<ZoomDrawerNotifier>(context, listen: false)
                 .toggleDrawer();
@@ -70,12 +71,16 @@ class _HomeTvPageState extends State<HomeTvPage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return _TvList(data.onAirTvSeries);
+                  return _TvList(
+                    keySection: 'now_playing',
+                    tvSeries: data.onAirTvSeries,
+                  );
                 } else {
                   return Text('Failed');
                 }
               }),
               ContentSubHeading(
+                key: Key('popular_heading'),
                 title: 'Popular',
                 onTap: () {
                   Navigator.pushNamed(context, PopularTvSeriesPage.ROUTE_NAME);
@@ -88,12 +93,16 @@ class _HomeTvPageState extends State<HomeTvPage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return _TvList(data.popularTvSeries);
+                  return _TvList(
+                    keySection: 'popular',
+                    tvSeries: data.popularTvSeries,
+                  );
                 } else {
                   return Text('Failed');
                 }
               }),
               ContentSubHeading(
+                key: Key('top_rated_heading'),
                 title: 'Top Rated',
                 onTap: () {
                   Navigator.pushNamed(context, TopRatedTvSeriesPage.ROUTE_NAME);
@@ -106,7 +115,10 @@ class _HomeTvPageState extends State<HomeTvPage> {
                     child: CircularProgressIndicator(),
                   );
                 } else if (state == RequestState.Loaded) {
-                  return _TvList(data.topRatedTvSeries);
+                  return _TvList(
+                    keySection: 'top_rated',
+                    tvSeries: data.topRatedTvSeries,
+                  );
                 } else {
                   return Text('Failed');
                 }
@@ -120,9 +132,13 @@ class _HomeTvPageState extends State<HomeTvPage> {
 }
 
 class _TvList extends StatelessWidget {
+  final String keySection;
   final List<Tv> tvSeries;
 
-  _TvList(this.tvSeries);
+  _TvList({
+    required this.keySection,
+    required this.tvSeries,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +152,7 @@ class _TvList extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(8),
             child: InkWell(
+              key: Key('${keySection}_$index'),
               onTap: () {
                 Navigator.pushNamed(
                   context,

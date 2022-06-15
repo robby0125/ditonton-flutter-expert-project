@@ -25,7 +25,7 @@ class _TopRatedTvSeriesPageState extends State<TopRatedTvSeriesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Top Rated Tv Series'),
+        title: Text('Top Rated TV Series'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -37,6 +37,7 @@ class _TopRatedTvSeriesPageState extends State<TopRatedTvSeriesPage> {
               );
             } else if (data.state == RequestState.Loaded) {
               return ListView.builder(
+                key: Key('top_rated_list'),
                 itemBuilder: (context, index) {
                   final tv = data.tvSeries[index];
                   return ItemCard(

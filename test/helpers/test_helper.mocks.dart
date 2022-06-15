@@ -31,6 +31,8 @@ import 'package:ditonton/domain/entities/tv_detail.dart' as _i18;
 import 'package:ditonton/domain/entities/tv_season_detail.dart' as _i19;
 import 'package:ditonton/domain/repositories/movie_repository.dart' as _i7;
 import 'package:ditonton/domain/repositories/tv_repository.dart' as _i16;
+import 'package:flutter/src/widgets/navigator.dart' as _i30;
+import 'package:flutter/src/widgets/routes.dart' as _i29;
 import 'package:http/http.dart' as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:sqflite/sqflite.dart' as _i25;
@@ -514,6 +516,11 @@ class MockDatabaseHelper extends _i1.Mock implements _i24.DatabaseHelper {
   _i8.Future<int> clearTvSeriesCache(String? category) =>
       (super.noSuchMethod(Invocation.method(#clearTvSeriesCache, [category]),
           returnValue: Future<int>.value(0)) as _i8.Future<int>);
+  @override
+  _i8.Future<void> dropDatabase() =>
+      (super.noSuchMethod(Invocation.method(#dropDatabase, []),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
 }
 
 /// A class which mocks [NetworkInfo].
@@ -608,4 +615,55 @@ class MockHttpClient extends _i1.Mock implements _i6.Client {
   @override
   void close() => super.noSuchMethod(Invocation.method(#close, []),
       returnValueForMissingStub: null);
+}
+
+/// A class which mocks [RouteObserver].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockRouteObserver extends _i1.Mock
+    implements _i29.RouteObserver<_i29.ModalRoute<dynamic>> {
+  @override
+  bool debugObservingRoute(_i29.ModalRoute<dynamic>? route) =>
+      (super.noSuchMethod(Invocation.method(#debugObservingRoute, [route]),
+          returnValue: false) as bool);
+  @override
+  void subscribe(
+          _i29.RouteAware? routeAware, _i29.ModalRoute<dynamic>? route) =>
+      super.noSuchMethod(Invocation.method(#subscribe, [routeAware, route]),
+          returnValueForMissingStub: null);
+  @override
+  void unsubscribe(_i29.RouteAware? routeAware) =>
+      super.noSuchMethod(Invocation.method(#unsubscribe, [routeAware]),
+          returnValueForMissingStub: null);
+  @override
+  void didPop(_i30.Route<dynamic>? route, _i30.Route<dynamic>? previousRoute) =>
+      super.noSuchMethod(Invocation.method(#didPop, [route, previousRoute]),
+          returnValueForMissingStub: null);
+  @override
+  void didPush(
+          _i30.Route<dynamic>? route, _i30.Route<dynamic>? previousRoute) =>
+      super.noSuchMethod(Invocation.method(#didPush, [route, previousRoute]),
+          returnValueForMissingStub: null);
+  @override
+  void didRemove(
+          _i30.Route<dynamic>? route, _i30.Route<dynamic>? previousRoute) =>
+      super.noSuchMethod(Invocation.method(#didRemove, [route, previousRoute]),
+          returnValueForMissingStub: null);
+  @override
+  void didReplace(
+          {_i30.Route<dynamic>? newRoute, _i30.Route<dynamic>? oldRoute}) =>
+      super.noSuchMethod(
+          Invocation.method(
+              #didReplace, [], {#newRoute: newRoute, #oldRoute: oldRoute}),
+          returnValueForMissingStub: null);
+  @override
+  void didStartUserGesture(
+          _i30.Route<dynamic>? route, _i30.Route<dynamic>? previousRoute) =>
+      super.noSuchMethod(
+          Invocation.method(#didStartUserGesture, [route, previousRoute]),
+          returnValueForMissingStub: null);
+  @override
+  void didStopUserGesture() =>
+      super.noSuchMethod(Invocation.method(#didStopUserGesture, []),
+          returnValueForMissingStub: null);
 }

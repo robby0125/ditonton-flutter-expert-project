@@ -6,7 +6,6 @@ import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:ditonton/presentation/pages/tv_season_detail_page.dart';
 import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_season_detail_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -85,6 +84,7 @@ class _DetailContent extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(top: 48 + 8),
           child: DraggableScrollableSheet(
+            key: Key('detail_scrollable'),
             builder: (context, scrollController) {
               return Container(
                 decoration: BoxDecoration(
@@ -110,6 +110,7 @@ class _DetailContent extends StatelessWidget {
                               style: kHeading5,
                             ),
                             ElevatedButton(
+                              key: Key('watchlist_button'),
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
                                   await Provider.of<TvDetailNotifier>(context,
@@ -153,9 +154,6 @@ class _DetailContent extends StatelessWidget {
                             Text(
                               showGenres(tv.genres),
                             ),
-                            // Text(
-                            //   _showDuration(tv.runtime),
-                            // ),
                             Row(
                               children: [
                                 RatingBarIndicator(
@@ -195,12 +193,8 @@ class _DetailContent extends StatelessWidget {
                                       return Padding(
                                         padding: const EdgeInsets.all(4.0),
                                         child: InkWell(
+                                          key: Key('season_button_$index'),
                                           onTap: () {
-                                            Provider.of<TvSeasonDetailNotifier>(
-                                                    context,
-                                                    listen: false)
-                                                .expandEpisodePanel(-1);
-
                                             Navigator.pushNamed(
                                               context,
                                               TvSeasonDetailPage.ROUTE_NAME,
@@ -245,13 +239,19 @@ class _DetailContent extends StatelessWidget {
                                 if (data.recommendationState ==
                                     RequestState.Loading) {
                                   return Center(
-                                    child: CircularProgressIndicator(),
+                                    child: CircularProgressIndicator(
+                                      key: Key('recommendation_progress'),
+                                    ),
                                   );
                                 } else if (data.recommendationState ==
                                     RequestState.Error) {
-                                  return Text(data.message);
+                                  return Text(
+                                    data.message,
+                                    key: Key('recommendation_error'),
+                                  );
                                 } else if (data.recommendationState ==
-                                    RequestState.Loaded) {
+                                        RequestState.Loaded &&
+                                    data.tvRecommendation.isNotEmpty) {
                                   return Container(
                                     height: 150,
                                     child: ListView.builder(
@@ -261,6 +261,7 @@ class _DetailContent extends StatelessWidget {
                                         return Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: InkWell(
+                                            key: Key('recommendation_button'),
                                             onTap: () {
                                               Navigator.pushReplacementNamed(
                                                 context,
@@ -292,7 +293,7 @@ class _DetailContent extends StatelessWidget {
                                     ),
                                   );
                                 } else {
-                                  return Container();
+                                  return Text('No Recommendation');
                                 }
                               },
                             ),
@@ -323,6 +324,7 @@ class _DetailContent extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
+              key: Key('back_button'),
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);

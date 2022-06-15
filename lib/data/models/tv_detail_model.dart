@@ -2,6 +2,7 @@ import 'package:ditonton/data/models/genre_model.dart';
 import 'package:ditonton/data/models/tv_season_model.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 
 class TvDetailResponse extends Equatable {
   TvDetailResponse({
@@ -53,7 +54,7 @@ class TvDetailResponse extends Equatable {
       );
 
   Map<String, dynamic> toJson() => {
-        'first_air_date': firstAirDate,
+        'first_air_date': DateFormat('yyyy-MM-dd').format(firstAirDate),
         'genres': List<dynamic>.from(genres.map((x) => x.toJson())),
         'id': id,
         'name': name,

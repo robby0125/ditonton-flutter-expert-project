@@ -29,6 +29,7 @@ class HomePage extends StatelessWidget {
             accountEmail: Text('ditonton@dicoding.com'),
           ),
           ListTile(
+            key: Key('movies_button'),
             onTap: () {
               Provider.of<ZoomDrawerNotifier>(context, listen: false)
                   .switchMainScreen(mainScreen: HomeMoviePage());
@@ -37,6 +38,7 @@ class HomePage extends StatelessWidget {
             title: Text('Movies'),
           ),
           ListTile(
+            key: Key('tv_series_button'),
             onTap: () {
               Provider.of<ZoomDrawerNotifier>(context, listen: false)
                   .switchMainScreen(mainScreen: HomeTvPage());
@@ -45,6 +47,7 @@ class HomePage extends StatelessWidget {
             title: Text('TV Series'),
           ),
           ListTile(
+            key: Key('watchlist_button'),
             leading: Icon(Icons.save_alt),
             title: Text('Watchlist'),
             onTap: () {

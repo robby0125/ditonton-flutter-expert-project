@@ -37,6 +37,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
               );
             } else if (data.state == RequestState.Loaded) {
               return ListView.builder(
+                key: Key('popular_list'),
                 itemBuilder: (context, index) {
                   final movie = data.movies[index];
                   return ItemCard(
