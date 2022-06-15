@@ -15,18 +15,23 @@ class TvSeasonDetailNotifier extends ChangeNotifier {
   });
 
   late TvDetail _tvDetail;
+
   TvDetail get tvDetail => _tvDetail;
 
   late TvSeasonDetail _tvSeasonDetail;
+
   TvSeasonDetail get tvSeasonDetail => _tvSeasonDetail;
 
   RequestState _requestState = RequestState.Empty;
+
   RequestState get requestState => _requestState;
 
   String _message = '';
+
   String get message => _message;
 
   int _curEpisodeExpanded = -1;
+
   int get curEpisodeExpanded => _curEpisodeExpanded;
 
   Future<void> fetchTvSeasonDetail(int tvId, int seasonNumber) async {

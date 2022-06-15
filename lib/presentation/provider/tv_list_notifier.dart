@@ -7,24 +7,31 @@ import 'package:flutter/cupertino.dart';
 
 class TvListNotifier extends ChangeNotifier {
   var _onAirTvSeries = <Tv>[];
+
   List<Tv> get onAirTvSeries => _onAirTvSeries;
 
   RequestState _onAirState = RequestState.Empty;
+
   RequestState get onAirState => _onAirState;
 
   var _popularTvSeries = <Tv>[];
+
   List<Tv> get popularTvSeries => _popularTvSeries;
 
   RequestState _popularState = RequestState.Empty;
+
   RequestState get popularState => _popularState;
 
   var _topRatedTvSeries = <Tv>[];
+
   List<Tv> get topRatedTvSeries => _topRatedTvSeries;
 
   RequestState _topRatedState = RequestState.Empty;
+
   RequestState get topRatedState => _topRatedState;
 
   String _message = '';
+
   String get message => _message;
 
   TvListNotifier({

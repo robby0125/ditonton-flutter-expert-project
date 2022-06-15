@@ -9,12 +9,15 @@ class PopularTvSeriesNotifier extends ChangeNotifier {
   PopularTvSeriesNotifier({required this.getPopularTvSeries});
 
   RequestState _state = RequestState.Empty;
+
   RequestState get state => _state;
 
   List<Tv> _tvSeries = [];
+
   List<Tv> get tvSeries => _tvSeries;
 
   String _message = '';
+
   String get message => _message;
 
   Future<void> fetchPopularTvSeries() async {

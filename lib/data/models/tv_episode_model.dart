@@ -41,7 +41,8 @@ class TvEpisodeModel extends Equatable {
       );
 
   Map<String, dynamic> toMap() => {
-        "air_date": airDate == null ? null : DateFormat('yyyy-MM-dd').format(airDate!),
+        "air_date":
+            airDate == null ? null : DateFormat('yyyy-MM-dd').format(airDate!),
         "episode_number": episodeNumber,
         "id": id,
         "name": name,

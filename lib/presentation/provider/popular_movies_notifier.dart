@@ -9,12 +9,15 @@ class PopularMoviesNotifier extends ChangeNotifier {
   PopularMoviesNotifier(this.getPopularMovies);
 
   RequestState _state = RequestState.Empty;
+
   RequestState get state => _state;
 
   List<Movie> _movies = [];
+
   List<Movie> get movies => _movies;
 
   String _message = '';
+
   String get message => _message;
 
   Future<void> fetchPopularMovies() async {
