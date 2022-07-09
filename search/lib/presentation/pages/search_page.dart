@@ -1,8 +1,9 @@
 import 'package:core/core.dart';
-import 'package:core/presentation/provider/search_notifier.dart';
 import 'package:core/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../provider/search_notifier.dart';
 
 class SearchPage extends StatelessWidget {
   final ContentSearch type;

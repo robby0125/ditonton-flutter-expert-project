@@ -1,8 +1,5 @@
 import 'package:core/domain/entities/movie.dart';
 import 'package:core/domain/entities/tv.dart';
-import 'package:core/domain/usecases/search_movies.dart';
-import 'package:core/domain/usecases/search_tv_series.dart';
-import 'package:core/presentation/provider/search_notifier.dart';
 import 'package:core/utils/content_search_enum.dart';
 import 'package:core/utils/failure.dart';
 import 'package:core/utils/state_enum.dart';
@@ -10,6 +7,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:search/search.dart';
 
 import 'search_notifier_test.mocks.dart';
 
