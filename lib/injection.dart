@@ -3,6 +3,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:search/presentation/bloc/search_bloc.dart';
 import 'package:search/search.dart';
 
 final locator = GetIt.instance;
@@ -84,6 +85,12 @@ void init() {
   locator.registerLazySingleton(
     () => WatchlistTvNotifier(
       getWatchlistTvSeries: locator(),
+    ),
+  );
+  locator.registerLazySingleton(
+    () => SearchBloc(
+      searchMovies: locator(),
+      searchTvSeries: locator(),
     ),
   );
 

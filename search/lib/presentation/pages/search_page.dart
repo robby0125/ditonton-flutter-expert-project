@@ -1,9 +1,10 @@
 import 'package:core/core.dart';
+import 'package:core/domain/entities/movie.dart';
+import 'package:core/domain/entities/tv.dart';
 import 'package:core/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import '../provider/search_notifier.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:search/presentation/bloc/search_bloc.dart';
 
 class SearchPage extends StatelessWidget {
   final ContentSearch type;
@@ -26,9 +27,13 @@ class SearchPage extends StatelessWidget {
           children: [
             TextField(
               key: const Key('query_field'),
-              onSubmitted: (query) {
-                Provider.of<SearchNotifier>(context, listen: false)
-                    .performSearch(type: type, query: query);
+              onChanged: (query) {
+                context.read<SearchBloc>().add(
+                      OnQueryChanged(
+                        query: query,
+                        contentSearch: type,
+                      ),
+                    );
               },
               decoration: const InputDecoration(
                 hintText: 'Search title',
@@ -42,46 +47,32 @@ class SearchPage extends StatelessWidget {
               'Search Result',
               style: kHeading6,
             ),
-            Consumer<SearchNotifier>(
-              builder: (context, data, child) {
-                final currentState = type == ContentSearch.Movie
-                    ? data.movieState
-                    : data.tvState;
-
-                if (currentState == RequestState.Loading) {
+            BlocBuilder<SearchBloc, SearchState>(
+              builder: (context, state) {
+                if (state is SearchLoading) {
                   return const Center(
                     child: CircularProgressIndicator(),
                   );
-                } else if (currentState == RequestState.Loaded) {
-                  final result = type == ContentSearch.Movie
-                      ? data.searchMovieResult
-                      : data.searchTvResult;
+                } else if (state is SearchHasData) {
+                  final result = state.result;
 
                   return Expanded(
                     child: ListView.builder(
                       key: const Key('result_list'),
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        int id = 0;
-                        String? title;
-                        String? overview;
-                        String? posterPath;
+                        final data = result[index];
 
                         if (type == ContentSearch.Movie) {
-                          final movie = data.searchMovieResult[index];
-
-                          id = movie.id;
-                          title = movie.title;
-                          overview = movie.overview;
-                          posterPath = movie.posterPath;
+                          data as Movie;
                         } else {
-                          final tv = data.searchTvResult[index];
-
-                          id = tv.id;
-                          title = tv.name;
-                          overview = tv.overview;
-                          posterPath = tv.posterPath;
+                          data as Tv;
                         }
+
+                        int id = data.id;
+                        String? title = data is Movie ? data.title : data.name;
+                        String? overview = data.overview;
+                        String? posterPath = data.posterPath;
 
                         return ItemCard(
                           id: id,
@@ -102,6 +93,12 @@ class SearchPage extends StatelessWidget {
                         );
                       },
                       itemCount: result.length,
+                    ),
+                  );
+                } else if (state is SearchError) {
+                  return Expanded(
+                    child: Center(
+                      child: Text(state.message),
                     ),
                   );
                 } else {
