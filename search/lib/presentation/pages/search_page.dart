@@ -1,10 +1,9 @@
 import 'package:core/core.dart';
-import 'package:core/domain/entities/movie.dart';
-import 'package:core/domain/entities/tv.dart';
-import 'package:core/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/movie.dart';
 import 'package:search/presentation/bloc/search_bloc.dart';
+import 'package:tv_series/tv_series.dart';
 
 class SearchPage extends StatelessWidget {
   final ContentSearch type;

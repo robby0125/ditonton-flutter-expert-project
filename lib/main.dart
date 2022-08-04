@@ -4,9 +4,12 @@ import 'package:ditonton/injection.dart' as di;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/movie.dart';
 import 'package:provider/provider.dart';
 import 'package:search/presentation/bloc/search_bloc.dart';
 import 'package:search/search.dart';
+import 'package:tv_series/tv_series.dart';
+import 'package:watchlist/watchlist.dart';
 
 void main() {
   di.init();
@@ -40,9 +43,6 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<TvListNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<ZoomDrawerNotifier>(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => di.locator<PopularTvSeriesNotifier>(),
         ),
         ChangeNotifierProvider(
@@ -59,6 +59,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => di.locator<SearchBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<ZoomDrawerBloc>(),
         ),
       ],
       child: MaterialApp(

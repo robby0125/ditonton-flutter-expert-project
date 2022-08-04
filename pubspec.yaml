@@ -30,12 +30,20 @@ dependencies:
   provider: ^6.0.2
   get_it: ^7.1.3
   flutter_bloc: ^8.0.1
+  flutter_zoom_drawer: ^3.0.3
   about:
     path: about
   core:
     path: core
   search:
     path: search
+  movie:
+    path: movie
+  tv_series:
+    path: tv_series
+  watchlist:
+    path: watchlist
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

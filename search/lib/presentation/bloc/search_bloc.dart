@@ -1,11 +1,11 @@
-import 'package:core/domain/entities/movie.dart';
-import 'package:core/domain/entities/tv.dart';
 import 'package:core/utils/content_search_enum.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie/movie.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:search/domain/usecases/search_movies.dart';
 import 'package:search/domain/usecases/search_tv_series.dart';
+import 'package:tv_series/tv_series.dart';
 
 part 'search_event.dart';
 

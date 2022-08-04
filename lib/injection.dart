@@ -3,13 +3,15 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:movie/movie.dart';
 import 'package:search/presentation/bloc/search_bloc.dart';
 import 'package:search/search.dart';
+import 'package:tv_series/tv_series.dart';
 
 final locator = GetIt.instance;
 
 void init() {
-  // provider
+  // bloc
   locator.registerFactory(
     () => MovieListNotifier(
       getNowPlayingMovies: locator(),
@@ -55,8 +57,10 @@ void init() {
     ),
   );
   locator.registerLazySingleton(
-    () => ZoomDrawerNotifier(
-      zoomDrawerController: locator(),
+    () => ZoomDrawerBloc(
+      controller: locator(),
+      homeMoviePage: locator<HomeMoviePage>(),
+      homeTvPage: locator<HomeTvPage>(),
     ),
   );
   locator.registerLazySingleton(
@@ -138,17 +142,19 @@ void init() {
     () => MovieRemoteDataSourceImpl(client: locator()),
   );
   locator.registerLazySingleton<MovieLocalDataSource>(
-    () => MovieLocalDataSourceImpl(databaseHelper: locator()),
+    () => MovieLocalDataSourceImpl(movieDatabaseHelper: locator()),
   );
   locator.registerLazySingleton<TvRemoteDataSource>(
     () => TvRemoteDataSourceImpl(client: locator()),
   );
   locator.registerLazySingleton<TvLocalDataSource>(
-    () => TvLocalDataSourceImpl(databaseHelper: locator()),
+    () => TvLocalDataSourceImpl(tvDatabaseHelper: locator()),
   );
 
   // helper
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
+  locator.registerLazySingleton(() => MovieDatabaseHelper());
+  locator.registerLazySingleton(() => TvDatabaseHelper());
 
   // network info
   locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(locator()));
@@ -157,4 +163,8 @@ void init() {
   locator.registerLazySingleton(() => http.Client());
   locator.registerLazySingleton(() => DataConnectionChecker());
   locator.registerLazySingleton(() => ZoomDrawerController());
+
+  // page
+  locator.registerLazySingleton(() => HomeMoviePage());
+  locator.registerLazySingleton(() => HomeTvPage());
 }

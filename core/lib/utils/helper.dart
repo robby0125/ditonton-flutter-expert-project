@@ -1,9 +1,7 @@
-import 'package:core/domain/entities/genre.dart';
-
-String showGenres(List<Genre> genres) {
+String showGenres(List<String> genreNames) {
   String result = '';
-  for (var genre in genres) {
-    result += '${genre.name}, ';
+  for (var genre in genreNames) {
+    result += '$genre, ';
   }
 
   if (result.isEmpty) {

@@ -1,11 +1,13 @@
-import 'package:core/domain/entities/movie.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:movie/movie.dart';
 import 'package:search/domain/usecases/search_movies.dart';
 
-import '../../../../core/test/helpers/test_helper.mocks.dart';
+import 'search_movies_test.mocks.dart';
 
+@GenerateMocks([MovieRepository])
 void main() {
   late SearchMovies useCase;
   late MockMovieRepository mockMovieRepository;

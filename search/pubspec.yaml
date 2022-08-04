@@ -15,6 +15,10 @@ dependencies:
   equatable: ^2.0.3
   core:
     path: ../core
+  movie:
+    path: ../movie
+  tv_series:
+    path: ../tv_series
   flutter_bloc: ^8.0.1
   rxdart: ^0.27.4
 

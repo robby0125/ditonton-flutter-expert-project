@@ -1,10 +1,7 @@
-import 'package:core/presentation/pages/home_movie_page.dart';
-import 'package:core/presentation/pages/home_tv_page.dart';
-import 'package:core/presentation/provider/zoom_drawer_notifier.dart';
-import 'package:core/utils/routes.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -29,8 +26,7 @@ class HomePage extends StatelessWidget {
         ListTile(
           key: const Key('movies_button'),
           onTap: () {
-            Provider.of<ZoomDrawerNotifier>(context, listen: false)
-                .switchMainScreen(mainScreen: const HomeMoviePage());
+            BlocProvider.of<ZoomDrawerBloc>(context).add(ToHomeMoviePage());
           },
           leading: const Icon(Icons.movie),
           title: const Text('Movies'),
@@ -38,8 +34,7 @@ class HomePage extends StatelessWidget {
         ListTile(
           key: const Key('tv_series_button'),
           onTap: () {
-            Provider.of<ZoomDrawerNotifier>(context, listen: false)
-                .switchMainScreen(mainScreen: const HomeTvPage());
+            BlocProvider.of<ZoomDrawerBloc>(context).add(ToHomeTvPage());
           },
           leading: const Icon(Icons.tv),
           title: const Text('TV Series'),
@@ -65,11 +60,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ZoomDrawerNotifier>(
-      builder: (context, data, child) => ZoomDrawer(
-        controller: data.zoomDrawerController,
+    return BlocBuilder<ZoomDrawerBloc, ZoomDrawerState>(
+      builder: (context, state) => ZoomDrawer(
+        controller: context.read<ZoomDrawerBloc>().controller,
         menuScreen: _buildDrawer(context: context),
-        mainScreen: data.mainScreen,
+        mainScreen: state.mainScreen,
         showShadow: true,
         angle: 0,
         menuBackgroundColor: const Color(0xFF151E30),
