@@ -28,8 +28,9 @@ class TvSeasonDetailResponse extends Equatable {
       TvSeasonDetailResponse(
         id: json["_id"],
         airDate: DateTime.tryParse(json["air_date"]),
-        episodes: List<TvEpisodeModel>.from(
-            json["episodes"].map((x) => TvEpisodeModel.fromMap(x))),
+        episodes: List<TvEpisodeModel>.from((json['episodes'] as List)
+            .map((e) => TvEpisodeModel.fromJson(e))
+            .where((element) => element.runtime != null)),
         name: json["name"],
         overview: json["overview"],
         tvEpisodeId: json["id"],
@@ -41,7 +42,7 @@ class TvSeasonDetailResponse extends Equatable {
         "_id": id,
         "air_date":
             airDate == null ? null : DateFormat('yyyy-MM-dd').format(airDate!),
-        "episodes": List<dynamic>.from(episodes.map((x) => x.toMap())),
+        "episodes": List<dynamic>.from(episodes.map((x) => x.toJson())),
         "name": name,
         "overview": overview,
         "id": tvEpisodeId,

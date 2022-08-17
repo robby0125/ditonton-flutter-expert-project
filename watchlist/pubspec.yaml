@@ -16,6 +16,8 @@ dependencies:
     path: ../movie
   tv_series:
     path: ../tv_series
+  flutter_bloc: ^8.0.1
+  equatable: ^2.0.3
 
 dev_dependencies:
   flutter_test:

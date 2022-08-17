@@ -17,7 +17,7 @@ void main() {
 
   test('should return Map with proper data when toJson is called', () {
     // act
-    final result = tTvEpisodeModel.toMap();
+    final result = tTvEpisodeModel.toJson();
 
     // assert
     final expectedMap = {

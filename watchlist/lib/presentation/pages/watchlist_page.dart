@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
-import 'package:movie/movie.dart';
-import 'package:tv_series/tv_series.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:watchlist/watchlist.dart';
 
 class WatchlistPage extends StatefulWidget {
   const WatchlistPage({Key? key}) : super(key: key);
@@ -16,11 +15,8 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<WatchlistMovieNotifier>(context, listen: false)
-          .fetchWatchlistMovies();
-
-      Provider.of<WatchlistTvNotifier>(context, listen: false)
-          .fetchWatchlistTvSeries();
+      context.read<WatchlistMovieBloc>().add(const FetchWatchlistMovies());
+      context.read<WatchlistTvSeriesBloc>().add(const FetchWatchlistTvSeries());
     });
   }
 
@@ -32,11 +28,8 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Provider.of<WatchlistMovieNotifier>(context, listen: false)
-        .fetchWatchlistMovies();
-
-    Provider.of<WatchlistTvNotifier>(context, listen: false)
-        .fetchWatchlistTvSeries();
+    context.read<WatchlistMovieBloc>().add(const FetchWatchlistMovies());
+    context.read<WatchlistTvSeriesBloc>().add(const FetchWatchlistTvSeries());
   }
 
   @override
@@ -72,17 +65,17 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   Widget _buildMovieWatchlistPage() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Consumer<WatchlistMovieNotifier>(
-        builder: (context, data, child) {
-          if (data.watchlistState == RequestState.Loading) {
+      child: BlocBuilder<WatchlistMovieBloc, WatchlistMovieState>(
+        builder: (context, state) {
+          if (state is WatchlistMovieLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (data.watchlistState == RequestState.Loaded) {
+          } else if (state is WatchlistMovieHasData) {
             return ListView.builder(
               key: const Key('movie_watchlist_listview'),
               itemBuilder: (context, index) {
-                final movie = data.watchlistMovies[index];
+                final movie = state.movies[index];
                 return ItemCard(
                   key: Key('movie_$index'),
                   id: movie.id,
@@ -98,12 +91,16 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
                   },
                 );
               },
-              itemCount: data.watchlistMovies.length,
+              itemCount: state.movies.length,
+            );
+          } else if (state is WatchlistMovieError) {
+            return _buildErrorMessage(
+              message: state.message,
+              alternateMessage: 'Empty Movie Watchlist',
             );
           } else {
             return _buildErrorMessage(
-              message: data.message,
-              alternateMessage: 'Empty Movie Watchlist',
+              message: 'Empty Movie Watchlist',
             );
           }
         },
@@ -114,17 +111,17 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   Widget _buildTvWatchlistPage() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Consumer<WatchlistTvNotifier>(
-        builder: (context, data, child) {
-          if (data.watchlistState == RequestState.Loading) {
+      child: BlocBuilder<WatchlistTvSeriesBloc, WatchlistTvSeriesState>(
+        builder: (context, state) {
+          if (state is WatchlistTvSeriesLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (data.watchlistState == RequestState.Loaded) {
+          } else if (state is WatchlistTvSeriesHasData) {
             return ListView.builder(
               key: const Key('tv_watchlist_listview'),
               itemBuilder: (context, index) {
-                final tv = data.watchlistTvSeries[index];
+                final tv = state.tvSeries[index];
                 return ItemCard(
                   key: Key('tv_$index'),
                   id: tv.id,
@@ -140,12 +137,16 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
                   },
                 );
               },
-              itemCount: data.watchlistTvSeries.length,
+              itemCount: state.tvSeries.length,
+            );
+          } else if (state is WatchlistTvSeriesError) {
+            return _buildErrorMessage(
+              message: state.message,
+              alternateMessage: 'Empty TV Watchlist',
             );
           } else {
             return _buildErrorMessage(
-              message: data.message,
-              alternateMessage: 'Empty TV Watchlist',
+              message: 'Empty TV Watchlist',
             );
           }
         },
@@ -155,7 +156,7 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
 
   Widget _buildErrorMessage({
     required String message,
-    required String alternateMessage,
+    String alternateMessage = 'No Message',
   }) {
     return Center(
       key: const Key('error_message'),

@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
-import 'package:core/presentation/widgets/content_sub_heading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movie/domain/entities/movie.dart';
-import 'package:movie/presentation/provider/movie_list_notifier.dart';
-import 'package:provider/provider.dart';
+import 'package:movie/movie.dart';
 
 class HomeMoviePage extends StatefulWidget {
   const HomeMoviePage({Key? key}) : super(key: key);
@@ -18,11 +15,14 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
-        () => Provider.of<MovieListNotifier>(context, listen: false)
-          ..fetchNowPlayingMovies()
-          ..fetchPopularMovies()
-          ..fetchTopRatedMovies());
+    Future.microtask(() {
+      BlocProvider.of<NowPlayingMovieBloc>(context)
+          .add(const FetchNowPlayingMovies());
+      BlocProvider.of<PopularMovieBloc>(context)
+          .add(const FetchPopularMovies());
+      BlocProvider.of<TopRatedMovieBloc>(context)
+          .add(const FetchTopRatedMovies());
+    });
   }
 
   @override
@@ -60,21 +60,24 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 'Now Playing',
                 style: kHeading6,
               ),
-              Consumer<MovieListNotifier>(builder: (context, data, child) {
-                final state = data.nowPlayingState;
-                if (state == RequestState.Loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return _MovieList(
-                    keySection: 'now_playing',
-                    movies: data.nowPlayingMovies,
-                  );
-                } else {
-                  return const Text('Failed');
-                }
-              }),
+              BlocBuilder<NowPlayingMovieBloc, NowPlayingMovieState>(
+                builder: (context, state) {
+                  if (state is NowPlayingMovieLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is NowPlayingMovieHasData) {
+                    return _MovieList(
+                      keySection: 'now_playing',
+                      movies: state.movies,
+                    );
+                  } else if (state is NowPlayingMovieError) {
+                    return Text(state.message);
+                  } else {
+                    return const Text('Failed');
+                  }
+                },
+              ),
               ContentSubHeading(
                 key: const Key('popular_heading'),
                 title: 'Popular',
@@ -82,21 +85,24 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                   Navigator.pushNamed(context, popularMoviesRoute);
                 },
               ),
-              Consumer<MovieListNotifier>(builder: (context, data, child) {
-                final state = data.popularMoviesState;
-                if (state == RequestState.Loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return _MovieList(
-                    keySection: 'popular',
-                    movies: data.popularMovies,
-                  );
-                } else {
-                  return const Text('Failed');
-                }
-              }),
+              BlocBuilder<PopularMovieBloc, PopularMovieState>(
+                builder: (context, state) {
+                  if (state is PopularMoviesLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is PopularMoviesHasData) {
+                    return _MovieList(
+                      keySection: 'popular',
+                      movies: state.movies,
+                    );
+                  } else if (state is PopularMoviesError) {
+                    return Text(state.message);
+                  } else {
+                    return const Text('Failed');
+                  }
+                },
+              ),
               ContentSubHeading(
                 key: const Key('top_rated_heading'),
                 title: 'Top Rated',
@@ -104,21 +110,24 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                   Navigator.pushNamed(context, topRatedMovieRoute);
                 },
               ),
-              Consumer<MovieListNotifier>(builder: (context, data, child) {
-                final state = data.topRatedMoviesState;
-                if (state == RequestState.Loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (state == RequestState.Loaded) {
-                  return _MovieList(
-                    keySection: 'top_rated',
-                    movies: data.topRatedMovies,
-                  );
-                } else {
-                  return const Text('Failed');
-                }
-              }),
+              BlocBuilder<TopRatedMovieBloc, TopRatedMovieState>(
+                builder: (context, state) {
+                  if (state is TopRatedMoviesLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (state is TopRatedMoviesHasData) {
+                    return _MovieList(
+                      keySection: 'top_rated',
+                      movies: state.movies,
+                    );
+                  } else if (state is TopRatedMoviesError) {
+                    return Text(state.message);
+                  } else {
+                    return const Text('Failed');
+                  }
+                },
+              ),
             ],
           ),
         ),

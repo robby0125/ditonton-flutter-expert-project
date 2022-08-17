@@ -1,8 +1,13 @@
 import 'package:core/utils/network_info.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:tv_series/tv_series.dart';
+
+class MockRouteObserver extends Mock implements RouteObserver {}
+
+class FakeRoute extends Fake implements Route {}
 
 @GenerateMocks([
   TvRepository,
@@ -12,6 +17,5 @@ import 'package:tv_series/tv_series.dart';
   NetworkInfo,
 ], customMocks: [
   MockSpec<http.Client>(as: #MockHttpClient),
-  MockSpec<RouteObserver<ModalRoute>>(returnNullOnMissingStub: true),
 ])
 void main() {}

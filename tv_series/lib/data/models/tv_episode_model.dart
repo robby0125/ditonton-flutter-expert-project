@@ -21,13 +21,13 @@ class TvEpisodeModel extends Equatable {
   final int id;
   final String name;
   final String overview;
-  final int runtime;
+  final int? runtime;
   final int seasonNumber;
   final String? stillPath;
   final double voteAverage;
   final int voteCount;
 
-  factory TvEpisodeModel.fromMap(Map<String, dynamic> json) => TvEpisodeModel(
+  factory TvEpisodeModel.fromJson(Map<String, dynamic> json) => TvEpisodeModel(
         airDate: DateTime.tryParse(json["air_date"]),
         episodeNumber: json["episode_number"],
         id: json["id"],
@@ -40,7 +40,7 @@ class TvEpisodeModel extends Equatable {
         voteCount: json["vote_count"],
       );
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toJson() => {
         "air_date":
             airDate == null ? null : DateFormat('yyyy-MM-dd').format(airDate!),
         "episode_number": episodeNumber,

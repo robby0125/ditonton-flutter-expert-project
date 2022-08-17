@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:provider/provider.dart';
 import 'package:tv_series/tv_series.dart';
 
 class TvSeasonDetailPage extends StatefulWidget {
@@ -24,9 +24,10 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
   void initState() {
     super.initState();
     Future.microtask(() {
-      Provider.of<TvSeasonDetailNotifier>(context, listen: false)
-        ..fetchTvSeasonDetail(widget.tvId, widget.seasonNumber)
-        ..expandEpisodePanel(-1);
+      context.read<TvSeasonDetailBloc>().add(
+            FetchTvSeasonDetail(widget.tvId, widget.seasonNumber),
+          );
+      context.read<TvEpisodePanelBloc>().add(const CloseAllPanels());
     });
   }
 
@@ -35,20 +36,19 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Consumer<TvSeasonDetailNotifier>(
-        builder: (context, provider, child) {
-          if (provider.requestState == RequestState.Loading) {
+      body: BlocBuilder<TvSeasonDetailBloc, TvSeasonDetailState>(
+        builder: (context, state) {
+          if (state is TvSeasonDetailLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (provider.requestState == RequestState.Loaded) {
-            final season = provider.tvSeasonDetail;
-
+          } else if (state is TvSeasonDetailHasData) {
+            final tvSeasonDetail = state.tvSeasonDetail;
             return SafeArea(
               child: Stack(
                 children: [
                   CachedNetworkImage(
-                    imageUrl: '$baseImageUrl${season.posterPath}',
+                    imageUrl: '$baseImageUrl${tvSeasonDetail.posterPath}',
                     width: screenWidth,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
@@ -74,12 +74,14 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                           child: Stack(
                             children: [
                               Builder(builder: (_) {
-                                if (season.airDate == null) {
+                                if (tvSeasonDetail.airDate == null) {
                                   return const Center(
                                     child: Text('Coming Soon!'),
                                   );
                                 } else {
                                   return _buildSeasonInfo(
+                                    tvDetail: state.tvDetail,
+                                    tvSeasonDetail: tvSeasonDetail,
                                     scrollController: scrollController,
                                   );
                                 }
@@ -117,8 +119,10 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                 ],
               ),
             );
+          } else if (state is TvSeasonDetailError) {
+            return Text(state.message);
           } else {
-            return Text(provider.message);
+            return const Text('Failed');
           }
         },
       ),
@@ -126,77 +130,73 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
   }
 
   Widget _buildSeasonInfo({
+    required TvDetail tvDetail,
+    required TvSeasonDetail tvSeasonDetail,
     required ScrollController scrollController,
   }) {
-    return Consumer<TvSeasonDetailNotifier>(
-        builder: (context, provider, child) {
-      final tv = provider.tvDetail;
-      final season = provider.tvSeasonDetail;
-
-      return Container(
-        margin: const EdgeInsets.only(top: 16),
-        child: SingleChildScrollView(
-          controller: scrollController,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                tv.name,
-                style: kSubtitle,
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: SingleChildScrollView(
+        controller: scrollController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              tvDetail.name,
+              style: kSubtitle,
+            ),
+            Text(
+              tvSeasonDetail.name,
+              style: kHeading5,
+              key: const Key('season_name'),
+            ),
+            Text(
+              '(${tvSeasonDetail.airDate!.year})',
+              style: kSubtitle.copyWith(
+                color: kDavysGrey,
+                fontWeight: FontWeight.bold,
               ),
-              Text(
-                season.name,
-                style: kHeading5,
-                key: const Key('season_name'),
-              ),
-              Text(
-                '(${season.airDate!.year})',
-                style: kSubtitle.copyWith(
-                  color: kDavysGrey,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Overview',
-                style: kHeading6,
-              ),
-              Text(
-                season.overview.isNotEmpty ? season.overview : 'No overview',
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Episodes',
-                style: kHeading6,
-              ),
-              const SizedBox(height: 8),
-              _buildEpisodeList(),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Overview',
+              style: kHeading6,
+            ),
+            Text(
+              tvSeasonDetail.overview.isNotEmpty
+                  ? tvSeasonDetail.overview
+                  : 'No overview',
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Episodes',
+              style: kHeading6,
+            ),
+            const SizedBox(height: 8),
+            _buildEpisodeList(episodes: tvSeasonDetail.episodes),
+          ],
         ),
-      );
-    });
+      ),
+    );
   }
 
-  Widget _buildEpisodeList() {
-    return Consumer<TvSeasonDetailNotifier>(
-        builder: (context, provider, child) {
+  Widget _buildEpisodeList({required List<TvEpisode> episodes}) {
+    return BlocBuilder<TvEpisodePanelBloc, TvEpisodePanelState>(
+        builder: (context, state) {
       return ExpansionPanelList(
         children: List.generate(
-          provider.tvSeasonDetail.episodes.length,
-          (index) {
-            final episode = provider.tvSeasonDetail.episodes[index];
-
-            return _buildEpisodePanel(
-              numEpisode: index + 1,
-              episode: episode,
-              isExpanded: provider.curEpisodeExpanded == index,
-            );
-          },
+          episodes.length,
+          (index) => _buildEpisodePanel(
+            numEpisode: index + 1,
+            episode: episodes[index],
+            isExpanded: state.expandedIndex.contains(index),
+          ),
         ),
         animationDuration: const Duration(milliseconds: 500),
         expansionCallback: (index, isOpen) {
-          provider.expandEpisodePanel(isOpen ? -1 : index);
+          context.read<TvEpisodePanelBloc>().add(
+                isOpen ? ClosePanel(index) : OpenPanel(index),
+              );
         },
       );
     });
@@ -251,7 +251,7 @@ class _TvSeasonDetailPageState extends State<TvSeasonDetailPage> {
                     ),
                     key: const Key('episode_name'),
                   ),
-                  Text(showDuration(episode.runtime)),
+                  Text(showDuration(episode.runtime!)),
                   Row(
                     children: [
                       RatingBarIndicator(

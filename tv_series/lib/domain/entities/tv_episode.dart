@@ -19,7 +19,7 @@ class TvEpisode extends Equatable {
   final int id;
   final String name;
   final String overview;
-  final int runtime;
+  final int? runtime;
   final int seasonNumber;
   final String? stillPath;
   final double voteAverage;

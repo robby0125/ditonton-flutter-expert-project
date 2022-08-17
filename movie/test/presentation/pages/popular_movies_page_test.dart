@@ -1,40 +1,55 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
-import 'package:core/presentation/widgets/item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:movie/presentation/pages/movie_detail_page.dart';
-import 'package:movie/presentation/pages/popular_movies_page.dart';
-import 'package:movie/presentation/provider/movie_detail_notifier.dart';
-import 'package:movie/presentation/provider/popular_movies_notifier.dart';
-import 'package:provider/provider.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:movie/movie.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import '../../helper/test_helper.mocks.dart';
-import 'movie_detail_page_test.mocks.dart';
-import 'popular_movies_page_test.mocks.dart';
+import '../../helper/movie_detail_bloc_mock.dart';
+import '../../helper/movie_watchlist_bloc_mock.dart';
+import '../../helper/test_helper.dart';
 
-@GenerateMocks([PopularMoviesNotifier])
+class MockPopularMovieBloc
+    extends MockBloc<FetchPopularMovies, PopularMovieState>
+    implements PopularMovieBloc {}
+
+class FakeFetchPopularMovies extends Fake implements FetchPopularMovies {}
+
+class FakePopularMovieState extends Fake implements PopularMovieState {}
+
 void main() {
-  late MockPopularMoviesNotifier mockPopularMoviesNotifier;
-  late MockMovieDetailNotifier mockMovieDetailNotifier;
+  late MockPopularMovieBloc mockPopularMovieBloc;
+  late MockMovieDetailBloc mockMovieDetailBloc;
+  late MockMovieWatchlistBloc mockMovieWatchlistBloc;
   late MockRouteObserver mockRouteObserver;
+  late MaterialPageRoute detailRoute;
+
+  setUpAll(() {
+    registerFallbackValue(FakeFetchPopularMovies());
+    registerFallbackValue(FakePopularMovieState());
+    registerFallbackValue(FakeRoute());
+  });
 
   setUp(() {
-    mockPopularMoviesNotifier = MockPopularMoviesNotifier();
-    mockMovieDetailNotifier = MockMovieDetailNotifier();
+    mockPopularMovieBloc = MockPopularMovieBloc();
+    mockMovieDetailBloc = MockMovieDetailBloc();
+    mockMovieWatchlistBloc = MockMovieWatchlistBloc();
     mockRouteObserver = MockRouteObserver();
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider<PopularMoviesNotifier>.value(
-          value: mockPopularMoviesNotifier,
+        BlocProvider<PopularMovieBloc>(
+          create: (_) => mockPopularMovieBloc,
         ),
-        ChangeNotifierProvider<MovieDetailNotifier>.value(
-          value: mockMovieDetailNotifier,
+        BlocProvider<MovieDetailBloc>(
+          create: (_) => mockMovieDetailBloc,
+        ),
+        BlocProvider<MovieWatchlistBloc>(
+          create: (_) => mockMovieWatchlistBloc,
         ),
       ],
       child: MaterialApp(
@@ -44,10 +59,12 @@ void main() {
           switch (settings.name) {
             case movieDetailRoute:
               final id = settings.arguments as int;
-              return MaterialPageRoute(
+              detailRoute = MaterialPageRoute(
                 builder: (_) => MovieDetailPage(id: id),
                 settings: settings,
               );
+
+              return detailRoute;
 
             default:
               return MaterialPageRoute(builder: (_) {
@@ -65,7 +82,7 @@ void main() {
 
   testWidgets('Page should display center progress bar when loading',
       (WidgetTester tester) async {
-    when(mockPopularMoviesNotifier.state).thenReturn(RequestState.Loading);
+    when(() => mockPopularMovieBloc.state).thenReturn(PopularMoviesLoading());
 
     final progressBarFinder = find.byType(CircularProgressIndicator);
     final centerFinder = find.byType(Center);
@@ -79,8 +96,8 @@ void main() {
   testWidgets(
       'Page should display ListView and at least one ItemCard when data is loaded',
       (WidgetTester tester) async {
-    when(mockPopularMoviesNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockPopularMoviesNotifier.movies).thenReturn([testMovieFromCache]);
+    when(() => mockPopularMovieBloc.state)
+        .thenReturn(PopularMoviesHasData([testMovieFromCache]));
 
     final listViewFinder = find.byType(ListView);
 
@@ -92,8 +109,8 @@ void main() {
 
   testWidgets('Page should display text with message when Error',
       (WidgetTester tester) async {
-    when(mockPopularMoviesNotifier.state).thenReturn(RequestState.Error);
-    when(mockPopularMoviesNotifier.message).thenReturn('Error message');
+    when(() => mockPopularMovieBloc.state)
+        .thenReturn(const PopularMoviesError('Error Message'));
 
     final textFinder = find.byKey(const Key('error_message'));
 
@@ -102,12 +119,15 @@ void main() {
     expect(textFinder, findsOneWidget);
   });
 
-  testWidgets('should navigate to MovieDetailPage when ItemCard is tapped',
-      (tester) async {
-    when(mockPopularMoviesNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockPopularMoviesNotifier.movies).thenReturn([testMovieFromCache]);
-    when(mockMovieDetailNotifier.movieState).thenReturn(RequestState.Error);
-    when(mockMovieDetailNotifier.message).thenReturn('Server Failure');
+  testWidgets('should navigate to MovieDetailPage when ItemCard is tapped', (tester) async {
+    when(() => mockPopularMovieBloc.state)
+        .thenReturn(PopularMoviesHasData([testMovieFromCache]));
+    when(() => mockMovieDetailBloc.state).thenReturn(const MovieDetailHasData(
+      movie: testMovieDetail,
+      recommendations: [],
+    ));
+    when(() => mockMovieWatchlistBloc.state)
+        .thenReturn(const MovieWatchlistState());
 
     await tester.pumpWidget(_makeTestableWidget(const PopularMoviesPage()));
 
@@ -118,9 +138,8 @@ void main() {
 
     await tester.ensureVisible(buttonTv);
     await tester.tap(buttonTv);
-    await tester.pumpAndSettle();
+    await tester.pump();
 
-    verify(mockRouteObserver.didPush(any, any));
-    expect(find.byType(MovieDetailPage), findsOneWidget);
+    verify(() => mockRouteObserver.didPush(detailRoute, any()));
   });
 }

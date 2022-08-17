@@ -1,36 +1,55 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:tv_series/tv_series.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import '../../helpers/test_helper.mocks.dart';
-import 'top_rated_tv_series_page_test.mocks.dart';
-import 'tv_detail_page_test.mocks.dart';
+import '../../helpers/test_helper.dart';
+import '../../helpers/tv_series_detail_bloc_mock.dart';
+import '../../helpers/tv_series_watchlist_bloc_mock.dart';
 
-@GenerateMocks([TopRatedTvSeriesNotifier])
+class MockTopRatedTvSeriesBloc
+    extends MockBloc<FetchTopRatedTvSeries, TopRatedTvSeriesState>
+    implements TopRatedTvSeriesBloc {}
+
+class FakeFetchTopRatedTvSeries extends Fake implements FetchTopRatedTvSeries {}
+
+class FakeTopRatedTvSeriesState extends Fake implements TopRatedTvSeriesState {}
+
 void main() {
-  late MockTopRatedTvSeriesNotifier mockTopRatedTvSeriesNotifier;
-  late MockTvDetailNotifier mockTvDetailNotifier;
+  late MockTopRatedTvSeriesBloc mockTopRatedTvSeriesBloc;
+  late MockTvSeriesDetailBloc mockTvSeriesDetailBloc;
+  late MockTvSeriesWatchlistBloc mockTvSeriesWatchlistBloc;
   late MockRouteObserver mockRouteObserver;
+  late MaterialPageRoute detailRoute;
+
+  setUpAll(() {
+    registerFallbackValue(FakeFetchTvSeriesDetail());
+    registerFallbackValue(FakeTopRatedTvSeriesState());
+    registerFallbackValue(FakeRoute());
+  });
 
   setUp(() {
-    mockTopRatedTvSeriesNotifier = MockTopRatedTvSeriesNotifier();
-    mockTvDetailNotifier = MockTvDetailNotifier();
+    mockTopRatedTvSeriesBloc = MockTopRatedTvSeriesBloc();
+    mockTvSeriesDetailBloc = MockTvSeriesDetailBloc();
+    mockTvSeriesWatchlistBloc = MockTvSeriesWatchlistBloc();
     mockRouteObserver = MockRouteObserver();
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return MultiProvider(
+    return MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider<TopRatedTvSeriesNotifier>.value(
-          value: mockTopRatedTvSeriesNotifier,
+        BlocProvider<TopRatedTvSeriesBloc>(
+          create: (_) => mockTopRatedTvSeriesBloc,
         ),
-        ChangeNotifierProvider<TvDetailNotifier>.value(
-          value: mockTvDetailNotifier,
+        BlocProvider<TvSeriesDetailBloc>(
+          create: (_) => mockTvSeriesDetailBloc,
+        ),
+        BlocProvider<TvSeriesWatchlistBloc>(
+          create: (_) => mockTvSeriesWatchlistBloc,
         ),
       ],
       child: MaterialApp(
@@ -40,10 +59,12 @@ void main() {
           switch (settings.name) {
             case tvDetailRoute:
               final id = settings.arguments as int;
-              return MaterialPageRoute(
+              detailRoute = MaterialPageRoute(
                 builder: (_) => TvDetailPage(id: id),
                 settings: settings,
               );
+
+              return detailRoute;
 
             default:
               return MaterialPageRoute(builder: (_) {
@@ -61,7 +82,8 @@ void main() {
 
   testWidgets('should display CircularProgressIndicator when loading data',
       (tester) async {
-    when(mockTopRatedTvSeriesNotifier.state).thenReturn(RequestState.Loading);
+    when(() => mockTopRatedTvSeriesBloc.state)
+        .thenReturn(TopRatedTvSeriesLoading());
 
     await tester.pumpWidget(_makeTestableWidget(const TopRatedTvSeriesPage()));
 
@@ -71,8 +93,8 @@ void main() {
   testWidgets(
       'should display ListView and at least one ItemCard when data is loaded',
       (tester) async {
-    when(mockTopRatedTvSeriesNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockTopRatedTvSeriesNotifier.tvSeries).thenReturn([testTvFromCache]);
+    when(() => mockTopRatedTvSeriesBloc.state)
+        .thenReturn(TopRatedTvSeriesHasData([testTvFromCache]));
 
     await tester.pumpWidget(_makeTestableWidget(const TopRatedTvSeriesPage()));
 
@@ -82,8 +104,8 @@ void main() {
 
   testWidgets('should display error message when load data is failed',
       (tester) async {
-    when(mockTopRatedTvSeriesNotifier.state).thenReturn(RequestState.Error);
-    when(mockTopRatedTvSeriesNotifier.message).thenReturn('Server Failure');
+    when(() => mockTopRatedTvSeriesBloc.state)
+        .thenReturn(const TopRatedTvSeriesError('Server Failure'));
 
     await tester.pumpWidget(_makeTestableWidget(const TopRatedTvSeriesPage()));
 
@@ -93,10 +115,14 @@ void main() {
 
   testWidgets('should navigate to TvDetailPage when ItemCard is tapped',
       (tester) async {
-    when(mockTopRatedTvSeriesNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockTopRatedTvSeriesNotifier.tvSeries).thenReturn([testTvFromCache]);
-    when(mockTvDetailNotifier.tvState).thenReturn(RequestState.Error);
-    when(mockTvDetailNotifier.message).thenReturn('Server Failure');
+    when(() => mockTopRatedTvSeriesBloc.state)
+        .thenReturn(TopRatedTvSeriesHasData([testTvFromCache]));
+    when(() => mockTvSeriesDetailBloc.state).thenReturn(TvSeriesDetailHasData(
+      tv: testTvDetail,
+      recommendations: const [],
+    ));
+    when(() => mockTvSeriesWatchlistBloc.state)
+        .thenReturn(const TvSeriesWatchlistState());
 
     await tester.pumpWidget(_makeTestableWidget(const TopRatedTvSeriesPage()));
 
@@ -107,9 +133,8 @@ void main() {
 
     await tester.ensureVisible(buttonTv);
     await tester.tap(buttonTv);
-    await tester.pumpAndSettle();
+    await tester.pump();
 
-    verify(mockRouteObserver.didPush(any, any));
-    expect(find.byType(TvDetailPage), findsOneWidget);
+    verify(() => mockRouteObserver.didPush(detailRoute, any()));
   });
 }
