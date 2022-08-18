@@ -32,7 +32,7 @@ class _CustomDrawerState extends State<CustomDrawer>
         const UserAccountsDrawerHeader(
           currentAccountPicture: CircleAvatar(
             backgroundImage: NetworkImage(
-              'https://raw.githubusercontent.com/dicodingacademy/assets/main/flutter_expert_academy/dicoding-icon.png',
+              'https://raw.githubusercontent.com/dicodingacademy/certificates/main/flutter_expert_academy/dicoding-icon.png',
             ),
           ),
           accountName: Text('Ditonton'),

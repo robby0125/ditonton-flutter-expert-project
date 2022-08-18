@@ -4,14 +4,17 @@ import 'package:ditonton/injection.dart' as di;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:http/io_client.dart';
 import 'package:movie/movie.dart';
 import 'package:search/presentation/bloc/search_bloc.dart';
 import 'package:search/search.dart';
 import 'package:tv_series/tv_series.dart';
 import 'package:watchlist/watchlist.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   di.init();
+  await di.locator.isReady<IOClient>();
   runApp(MyApp());
 }
 

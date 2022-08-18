@@ -3,6 +3,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_zoom_drawer/config.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:movie/movie.dart';
 import 'package:search/presentation/bloc/search_bloc.dart';
 import 'package:search/search.dart';
@@ -157,6 +158,9 @@ void init() {
   locator.registerLazySingleton<DatabaseHelper>(() => DatabaseHelper());
   locator.registerLazySingleton(() => MovieDatabaseHelper());
   locator.registerLazySingleton(() => TvDatabaseHelper());
+  locator.registerLazySingletonAsync<IOClient>(
+    () async => await SSLClient().ioClient,
+  );
 
   // network info
   locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(locator()));

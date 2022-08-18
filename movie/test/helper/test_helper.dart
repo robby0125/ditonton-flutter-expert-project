@@ -1,6 +1,6 @@
 import 'package:core/core.dart';
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:movie/movie.dart';
@@ -15,7 +15,6 @@ class FakeRoute extends Fake implements Route {}
   MovieLocalDataSource,
   MovieDatabaseHelper,
   NetworkInfo,
-], customMocks: [
-  MockSpec<http.Client>(as: #MockHttpClient),
+  IOClient,
 ])
 void main() {}

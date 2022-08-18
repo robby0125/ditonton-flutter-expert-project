@@ -15,4 +15,5 @@ export 'package:core/utils/failure.dart';
 export 'package:core/utils/helper.dart';
 export 'package:core/utils/network_info.dart';
 export 'package:core/utils/routes.dart';
+export 'package:core/utils/ssl_client.dart';
 export 'package:core/utils/state_enum.dart';
