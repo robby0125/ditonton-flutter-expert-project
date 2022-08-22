@@ -1,4 +1,3 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,17 +6,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:tv_series/tv_series.dart';
 
 import '../../dummy_data/dummy_objects.dart';
+import '../../helpers/popular_tv_series_bloc_mock.dart';
 import '../../helpers/test_helper.dart';
 import '../../helpers/tv_series_detail_bloc_mock.dart';
 import '../../helpers/tv_series_watchlist_bloc_mock.dart';
-
-class MockPopularTvSeriesBloc
-    extends MockBloc<FetchPopularTvSeries, PopularTvSeriesState>
-    implements PopularTvSeriesBloc {}
-
-class FakeFetchPopularTvSeries extends Fake implements FetchPopularTvSeries {}
-
-class FakePopularTvSeriesState extends Fake implements PopularTvSeriesState {}
 
 void main() {
   late MockPopularTvSeriesBloc mockPopularTvSeriesBloc;

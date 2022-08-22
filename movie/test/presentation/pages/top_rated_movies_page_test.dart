@@ -1,4 +1,3 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,14 +9,7 @@ import '../../dummy_data/dummy_objects.dart';
 import '../../helper/movie_detail_bloc_mock.dart';
 import '../../helper/movie_watchlist_bloc_mock.dart';
 import '../../helper/test_helper.dart';
-
-class MockTopRatedMovieBloc
-    extends MockBloc<FetchTopRatedMovies, TopRatedMovieState>
-    implements TopRatedMovieBloc {}
-
-class FakeFetchTopRatedMovies extends Fake implements FetchTopRatedMovies {}
-
-class FakeTopRatedMovieState extends Fake implements TopRatedMovieState {}
+import '../../helper/top_rated_movie_bloc_mock.dart';
 
 void main() {
   late MockTopRatedMovieBloc mockTopRatedMovieBloc;

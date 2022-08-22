@@ -1,4 +1,3 @@
-import 'package:bloc_test/bloc_test.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,15 +8,8 @@ import 'package:movie/movie.dart';
 import '../../dummy_data/dummy_objects.dart';
 import '../../helper/movie_detail_bloc_mock.dart';
 import '../../helper/movie_watchlist_bloc_mock.dart';
+import '../../helper/popular_movie_bloc_mock.dart';
 import '../../helper/test_helper.dart';
-
-class MockPopularMovieBloc
-    extends MockBloc<FetchPopularMovies, PopularMovieState>
-    implements PopularMovieBloc {}
-
-class FakeFetchPopularMovies extends Fake implements FetchPopularMovies {}
-
-class FakePopularMovieState extends Fake implements PopularMovieState {}
 
 void main() {
   late MockPopularMovieBloc mockPopularMovieBloc;
@@ -119,7 +111,8 @@ void main() {
     expect(textFinder, findsOneWidget);
   });
 
-  testWidgets('should navigate to MovieDetailPage when ItemCard is tapped', (tester) async {
+  testWidgets('should navigate to MovieDetailPage when ItemCard is tapped',
+      (tester) async {
     when(() => mockPopularMovieBloc.state)
         .thenReturn(PopularMoviesHasData([testMovieFromCache]));
     when(() => mockMovieDetailBloc.state).thenReturn(const MovieDetailHasData(

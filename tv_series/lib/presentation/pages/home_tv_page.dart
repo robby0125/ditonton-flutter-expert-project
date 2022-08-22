@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:tv_series/presentation/bloc/now_playing/now_playing_tv_series_bloc.dart';
 import 'package:tv_series/tv_series.dart';
 
 class HomeTvPage extends StatefulWidget {
@@ -76,6 +74,8 @@ class _HomeTvPageState extends State<HomeTvPage> {
                       keySection: 'now_playing',
                       tvSeries: state.tvSeries,
                     );
+                  } else if (state is NowPlayingTvSeriesError) {
+                    return Text(state.message);
                   } else {
                     return const Text('Failed');
                   }
@@ -99,6 +99,8 @@ class _HomeTvPageState extends State<HomeTvPage> {
                       keySection: 'popular',
                       tvSeries: state.tvSeries,
                     );
+                  } else if (state is PopularTvSeriesError) {
+                    return Text(state.message);
                   } else {
                     return const Text('Failed');
                   }
@@ -122,6 +124,8 @@ class _HomeTvPageState extends State<HomeTvPage> {
                       keySection: 'top_rated',
                       tvSeries: state.tvSeries,
                     );
+                  } else if (state is TopRatedTvSeriesError) {
+                    return Text(state.message);
                   } else {
                     return const Text('Failed');
                   }

@@ -11,17 +11,15 @@ class HomePage extends StatelessWidget {
   }) {
     return Column(
       children: [
-        const UserAccountsDrawerHeader(
-          decoration: BoxDecoration(
+        UserAccountsDrawerHeader(
+          decoration: const BoxDecoration(
             color: Colors.transparent,
           ),
           currentAccountPicture: CircleAvatar(
-            backgroundImage: NetworkImage(
-              'https://raw.githubusercontent.com/dicodingacademy/certificates/main/flutter_expert_academy/dicoding-icon.png',
-            ),
+            child: Image.asset('assets/circle-g.png'),
           ),
-          accountName: Text('Ditonton'),
-          accountEmail: Text('ditonton@dicoding.com'),
+          accountName: const Text('Ditonton'),
+          accountEmail: const Text('ditonton@dicoding.com'),
         ),
         ListTile(
           key: const Key('movies_button'),
