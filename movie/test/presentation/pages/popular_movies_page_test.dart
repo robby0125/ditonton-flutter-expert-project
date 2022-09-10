@@ -19,8 +19,6 @@ void main() {
   late MaterialPageRoute detailRoute;
 
   setUpAll(() {
-    registerFallbackValue(FakeFetchPopularMovies());
-    registerFallbackValue(FakePopularMovieState());
     registerFallbackValue(FakeRoute());
   });
 

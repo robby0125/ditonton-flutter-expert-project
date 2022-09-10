@@ -18,11 +18,16 @@ dependencies:
     path: ../tv_series
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  mockito: ^5.2.0
+  mocktail: ^0.3.0
+  build_runner: ^2.2.0
+  bloc_test: ^9.0.3
 
 flutter:
 

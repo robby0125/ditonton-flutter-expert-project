@@ -17,10 +17,6 @@ void main() {
   late MockRouteObserver mockRouteObserver;
 
   setUpAll(() {
-    registerFallbackValue(FakeFetchMovieDetail());
-    registerFallbackValue(FakeMovieDetailState());
-    registerFallbackValue(FakeMovieWatchlistEvent());
-    registerFallbackValue(FakeMovieWatchlistState());
     registerFallbackValue(FakeRoute());
   });
 
@@ -154,7 +150,7 @@ void main() {
 
     expect(find.byIcon(Icons.add), findsOneWidget);
 
-    await tester.tap(watchlistButton);
+    await tester.tap(watchlistButton, warnIfMissed: false);
     await tester.pump();
 
     expect(find.byType(SnackBar), findsOneWidget);
@@ -191,7 +187,7 @@ void main() {
 
     expect(find.byIcon(Icons.add), findsOneWidget);
 
-    await tester.tap(watchlistButton);
+    await tester.tap(watchlistButton, warnIfMissed: false);
     await tester.pump();
 
     expect(find.byType(AlertDialog), findsWidgets);
@@ -228,7 +224,7 @@ void main() {
 
     expect(find.byIcon(Icons.check), findsOneWidget);
 
-    await tester.tap(watchlistButton);
+    await tester.tap(watchlistButton, warnIfMissed: false);
     await tester.pump();
 
     expect(find.byType(SnackBar), findsOneWidget);

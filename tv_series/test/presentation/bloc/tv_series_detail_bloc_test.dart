@@ -72,10 +72,31 @@ void main() {
     );
 
     blocTest<TvSeriesDetailBloc, TvSeriesDetailState>(
-      'should emit [Loading, Error] when data gotten is unsuccessful',
+      'should emit [Loading, Error] when tv detail data gotten is unsuccessful',
       build: () {
         when(mockGetTvDetail.execute(tId))
             .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetTvRecommendation.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+
+        return tvSeriesDetailBloc;
+      },
+      act: (bloc) => bloc.add(const FetchTvSeriesDetail(tId)),
+      expect: () => [
+        TvSeriesDetailLoading(),
+        const TvSeriesDetailError('Server Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetTvDetail.execute(tId));
+        verify(mockGetTvRecommendation.execute(tId));
+      },
+    );
+
+    blocTest<TvSeriesDetailBloc, TvSeriesDetailState>(
+      'should emit [Loading, Error] when tv recommendations data gotten is unsuccessful',
+      build: () {
+        when(mockGetTvDetail.execute(tId))
+            .thenAnswer((_) async => Right(testTvDetail));
         when(mockGetTvRecommendation.execute(tId))
             .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
 

@@ -3,14 +3,14 @@ import 'package:movie/movie.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 
 class MovieDatabaseHelper {
-  static MovieDatabaseHelper? _tvDatabaseHelper;
+  static MovieDatabaseHelper? _movieDatabaseHelper;
 
   MovieDatabaseHelper._instance() {
-    _tvDatabaseHelper = this;
+    _movieDatabaseHelper = this;
   }
 
   factory MovieDatabaseHelper() =>
-      _tvDatabaseHelper ?? MovieDatabaseHelper._instance();
+      _movieDatabaseHelper ?? MovieDatabaseHelper._instance();
 
   static const String _tblMovieWatchlist = 'movie_watchlist';
   static const String _tblMovieCache = 'cache_movie';

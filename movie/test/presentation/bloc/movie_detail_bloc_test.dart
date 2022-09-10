@@ -72,10 +72,31 @@ void main() {
     );
 
     blocTest<MovieDetailBloc, MovieDetailState>(
-      'should emit [Loading, Error] when data gotten is unsuccessful',
+      'should emit [Loading, Error] when movie detail data gotten is unsuccessful',
       build: () {
         when(mockGetMovieDetail.execute(tId))
             .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        when(mockGetMovieRecommendations.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+
+        return movieDetailBloc;
+      },
+      act: (bloc) => bloc.add(const FetchMovieDetail(tId)),
+      expect: () => [
+        MovieDetailLoading(),
+        const MovieDetailError('Server Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetMovieDetail.execute(tId));
+        verify(mockGetMovieRecommendations.execute(tId));
+      },
+    );
+
+    blocTest<MovieDetailBloc, MovieDetailState>(
+      'should emit [Loading, Error] when movie recommendations data gotten is unsuccessful',
+      build: () {
+        when(mockGetMovieDetail.execute(tId))
+            .thenAnswer((_) async => const Right(testMovieDetail));
         when(mockGetMovieRecommendations.execute(tId))
             .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
 

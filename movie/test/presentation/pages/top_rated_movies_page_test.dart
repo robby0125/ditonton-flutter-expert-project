@@ -19,10 +19,6 @@ void main() {
   late MaterialPageRoute detailRoute;
 
   setUpAll(() {
-    registerFallbackValue(FakeFetchTopRatedMovies());
-    registerFallbackValue(FakeTopRatedMovieState());
-    registerFallbackValue(FakeMovieWatchlistEvent());
-    registerFallbackValue(FakeMovieWatchlistState());
     registerFallbackValue(FakeRoute());
   });
 

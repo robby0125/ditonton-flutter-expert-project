@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-08-22 20:28:40</td>
+            <td class="headerValue">2022-09-10 17:16:59</td>
             <td></td>
           </tr>
           <tr><td><img src="../../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -61,14 +61,14 @@
 <a name="3"><span class="lineNum">       3 </span>            : import 'package:sqflite_sqlcipher/sqflite.dart';</a>
 <a name="4"><span class="lineNum">       4 </span>            : </a>
 <a name="5"><span class="lineNum">       5 </span>            : class MovieDatabaseHelper {</a>
-<a name="6"><span class="lineNum">       6 </span>            :   static MovieDatabaseHelper? _tvDatabaseHelper;</a>
+<a name="6"><span class="lineNum">       6 </span>            :   static MovieDatabaseHelper? _movieDatabaseHelper;</a>
 <a name="7"><span class="lineNum">       7 </span>            : </a>
 <a name="8"><span class="lineNum">       8 </span><span class="lineNoCov">          0 :   MovieDatabaseHelper._instance() {</span></a>
-<a name="9"><span class="lineNum">       9 </span>            :     _tvDatabaseHelper = this;</a>
+<a name="9"><span class="lineNum">       9 </span>            :     _movieDatabaseHelper = this;</a>
 <a name="10"><span class="lineNum">      10 </span>            :   }</a>
 <a name="11"><span class="lineNum">      11 </span>            : </a>
 <a name="12"><span class="lineNum">      12 </span><span class="lineNoCov">          0 :   factory MovieDatabaseHelper() =&gt;</span></a>
-<a name="13"><span class="lineNum">      13 </span><span class="lineNoCov">          0 :       _tvDatabaseHelper ?? MovieDatabaseHelper._instance();</span></a>
+<a name="13"><span class="lineNum">      13 </span><span class="lineNoCov">          0 :       _movieDatabaseHelper ?? MovieDatabaseHelper._instance();</span></a>
 <a name="14"><span class="lineNum">      14 </span>            : </a>
 <a name="15"><span class="lineNum">      15 </span>            :   static const String _tblMovieWatchlist = 'movie_watchlist';</a>
 <a name="16"><span class="lineNum">      16 </span>            :   static const String _tblMovieCache = 'cache_movie';</a>

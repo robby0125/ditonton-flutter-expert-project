@@ -19,8 +19,6 @@ void main() {
   late MaterialPageRoute detailRoute;
 
   setUpAll(() {
-    registerFallbackValue(FakeFetchTvSeriesDetail());
-    registerFallbackValue(FakeTopRatedTvSeriesState());
     registerFallbackValue(FakeRoute());
   });
 

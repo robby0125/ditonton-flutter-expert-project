@@ -22,14 +22,6 @@ void main() {
   late MaterialPageRoute seasonDetailRoute;
 
   setUpAll(() {
-    registerFallbackValue(FakeFetchTvSeriesDetail());
-    registerFallbackValue(FakeTvSeriesDetailState());
-    registerFallbackValue(FakeTvSeriesWatchlistEvent());
-    registerFallbackValue(FakeTvSeriesWatchlistState());
-    registerFallbackValue(FakeFetchTvSeasonDetail());
-    registerFallbackValue(FakeTvSeasonDetailState());
-    registerFallbackValue(FakeTvEpisodePanelEvent());
-    registerFallbackValue(FakeTvEpisodePanelState());
     registerFallbackValue(FakeRoute());
   });
 
@@ -261,7 +253,7 @@ void main() {
 
       expect(find.byIcon(Icons.add), findsOneWidget);
 
-      await tester.tap(watchlistButton);
+      await tester.tap(watchlistButton, warnIfMissed: false);
       await tester.pump();
 
       expect(find.byType(SnackBar), findsOneWidget);
@@ -290,7 +282,7 @@ void main() {
 
       expect(find.byIcon(Icons.add), findsOneWidget);
 
-      await tester.tap(watchlistButton);
+      await tester.tap(watchlistButton, warnIfMissed: false);
       await tester.pump();
 
       expect(find.byType(AlertDialog), findsWidgets);
@@ -319,7 +311,7 @@ void main() {
 
       expect(find.byIcon(Icons.check), findsOneWidget);
 
-      await tester.tap(watchlistButton);
+      await tester.tap(watchlistButton, warnIfMissed: false);
       await tester.pump();
 
       expect(find.byType(SnackBar), findsOneWidget);
