@@ -6,5 +6,5 @@ class FetchTvSeriesDetail extends Equatable {
   const FetchTvSeriesDetail(this.id);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [id];
 }

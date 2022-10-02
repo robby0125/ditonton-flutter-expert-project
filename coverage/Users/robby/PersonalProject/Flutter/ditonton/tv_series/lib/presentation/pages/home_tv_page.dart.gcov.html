@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">68</td>
+            <td class="headerCovTableEntry">70</td>
             <td class="headerCovTableEntry">73</td>
-            <td class="headerCovTableEntryHi">93.2 %</td>
+            <td class="headerCovTableEntryHi">95.9 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-10 20:20:31</td>
+            <td class="headerValue">2022-10-02 15:16:08</td>
             <td></td>
           </tr>
           <tr><td><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -100,8 +100,8 @@
 <a name="42"><span class="lineNum">      42 </span>            :         title: const Text('Ditonton TV Series'),</a>
 <a name="43"><span class="lineNum">      43 </span><span class="lineCov">          1 :         actions: [</span></a>
 <a name="44"><span class="lineNum">      44 </span><span class="lineCov">          1 :           IconButton(</span></a>
-<a name="45"><span class="lineNum">      45 </span><span class="lineNoCov">          0 :             onPressed: () {</span></a>
-<a name="46"><span class="lineNum">      46 </span><span class="lineNoCov">          0 :               Navigator.pushNamed(</span></a>
+<a name="45"><span class="lineNum">      45 </span><span class="lineCov">          1 :             onPressed: () {</span></a>
+<a name="46"><span class="lineNum">      46 </span><span class="lineCov">          1 :               Navigator.pushNamed(</span></a>
 <a name="47"><span class="lineNum">      47 </span>            :                 context,</a>
 <a name="48"><span class="lineNum">      48 </span>            :                 searchRoute,</a>
 <a name="49"><span class="lineNum">      49 </span>            :                 arguments: ContentSearch.TvSeries,</a>
@@ -229,21 +229,22 @@
 <a name="171"><span class="lineNum">     171 </span><span class="lineCov">          1 :               child: ClipRRect(</span></a>
 <a name="172"><span class="lineNum">     172 </span>            :                 borderRadius: const BorderRadius.all(Radius.circular(16)),</a>
 <a name="173"><span class="lineNum">     173 </span><span class="lineCov">          1 :                 child: CachedNetworkImage(</span></a>
-<a name="174"><span class="lineNum">     174 </span><span class="lineCov">          2 :                   imageUrl: '$baseImageUrl${tv.posterPath}',</span></a>
-<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          1 :                   placeholder: (context, url) =&gt; const Center(</span></a>
-<a name="176"><span class="lineNum">     176 </span>            :                     child: CircularProgressIndicator(),</a>
-<a name="177"><span class="lineNum">     177 </span>            :                   ),</a>
-<a name="178"><span class="lineNum">     178 </span><span class="lineNoCov">          0 :                   errorWidget: (context, url, error) =&gt; const Icon(Icons.error),</span></a>
-<a name="179"><span class="lineNum">     179 </span>            :                 ),</a>
-<a name="180"><span class="lineNum">     180 </span>            :               ),</a>
-<a name="181"><span class="lineNum">     181 </span>            :             ),</a>
-<a name="182"><span class="lineNum">     182 </span>            :           );</a>
-<a name="183"><span class="lineNum">     183 </span>            :         },</a>
-<a name="184"><span class="lineNum">     184 </span><span class="lineCov">          2 :         itemCount: tvSeries.length,</span></a>
-<a name="185"><span class="lineNum">     185 </span>            :       ),</a>
-<a name="186"><span class="lineNum">     186 </span>            :     );</a>
-<a name="187"><span class="lineNum">     187 </span>            :   }</a>
-<a name="188"><span class="lineNum">     188 </span>            : }</a>
+<a name="174"><span class="lineNum">     174 </span>            : </a>
+<a name="175"><span class="lineNum">     175 </span><span class="lineCov">          2 :                   imageUrl: '$baseImageUrl${tv.posterPath}',</span></a>
+<a name="176"><span class="lineNum">     176 </span><span class="lineCov">          1 :                   placeholder: (context, url) =&gt; const Center(</span></a>
+<a name="177"><span class="lineNum">     177 </span>            :                     child: CircularProgressIndicator(),</a>
+<a name="178"><span class="lineNum">     178 </span>            :                   ),</a>
+<a name="179"><span class="lineNum">     179 </span><span class="lineNoCov">          0 :                   errorWidget: (context, url, error) =&gt; const Icon(Icons.error),</span></a>
+<a name="180"><span class="lineNum">     180 </span>            :                 ),</a>
+<a name="181"><span class="lineNum">     181 </span>            :               ),</a>
+<a name="182"><span class="lineNum">     182 </span>            :             ),</a>
+<a name="183"><span class="lineNum">     183 </span>            :           );</a>
+<a name="184"><span class="lineNum">     184 </span>            :         },</a>
+<a name="185"><span class="lineNum">     185 </span><span class="lineCov">          2 :         itemCount: tvSeries.length,</span></a>
+<a name="186"><span class="lineNum">     186 </span>            :       ),</a>
+<a name="187"><span class="lineNum">     187 </span>            :     );</a>
+<a name="188"><span class="lineNum">     188 </span>            :   }</a>
+<a name="189"><span class="lineNum">     189 </span>            : }</a>
 </pre>
       </td>
     </tr>

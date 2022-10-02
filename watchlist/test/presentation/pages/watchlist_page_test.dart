@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:core/core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +19,18 @@ class MockWatchlistTvSeriesBloc
 class MockMovieDetailBloc extends MockBloc<FetchMovieDetail, MovieDetailState>
     implements MovieDetailBloc {}
 
+class MockMovieWatchlistBloc
+    extends MockBloc<MovieWatchlistEvent, MovieWatchlistState>
+    implements MovieWatchlistBloc {}
+
+class MockTvSeriesDetailBloc
+    extends MockBloc<FetchTvSeriesDetail, TvSeriesDetailState>
+    implements TvSeriesDetailBloc {}
+
+class MockTvSeriesWatchlistBloc
+    extends MockBloc<TvSeriesWatchlistEvent, TvSeriesWatchlistState>
+    implements TvSeriesWatchlistBloc {}
+
 class MockRouteObserver extends Mock implements RouteObserver {}
 
 class FakeRoute extends Fake implements Route {}
@@ -25,11 +38,21 @@ class FakeRoute extends Fake implements Route {}
 void main() {
   late MockWatchlistMovieBloc mockWatchlistMovieBloc;
   late MockWatchlistTvSeriesBloc mockWatchlistTvSeriesBloc;
+  late MockMovieDetailBloc mockMovieDetailBloc;
+  late MockMovieWatchlistBloc mockMovieWatchlistBloc;
+  late MockTvSeriesDetailBloc mockTvSeriesDetailBloc;
+  late MockTvSeriesWatchlistBloc mockTvSeriesWatchlistBloc;
   late MockRouteObserver mockRouteObserver;
+  late MaterialPageRoute movieDetailPageRoute;
+  late MaterialPageRoute tvDetailPageRoute;
 
   setUp(() {
     mockWatchlistMovieBloc = MockWatchlistMovieBloc();
     mockWatchlistTvSeriesBloc = MockWatchlistTvSeriesBloc();
+    mockMovieDetailBloc = MockMovieDetailBloc();
+    mockMovieWatchlistBloc = MockMovieWatchlistBloc();
+    mockTvSeriesDetailBloc = MockTvSeriesDetailBloc();
+    mockTvSeriesWatchlistBloc = MockTvSeriesWatchlistBloc();
     mockRouteObserver = MockRouteObserver();
 
     when(() => mockWatchlistMovieBloc.state)
@@ -47,12 +70,40 @@ void main() {
         BlocProvider<WatchlistTvSeriesBloc>(
           create: (_) => mockWatchlistTvSeriesBloc,
         ),
+        BlocProvider<MovieDetailBloc>(
+          create: (_) => mockMovieDetailBloc,
+        ),
+        BlocProvider<MovieWatchlistBloc>(
+          create: (_) => mockMovieWatchlistBloc,
+        ),
+        BlocProvider<TvSeriesDetailBloc>(
+          create: (_) => mockTvSeriesDetailBloc,
+        ),
+        BlocProvider<TvSeriesWatchlistBloc>(
+          create: (_) => mockTvSeriesWatchlistBloc,
+        ),
       ],
       child: MaterialApp(
         home: body,
         navigatorObservers: [mockRouteObserver],
         onGenerateRoute: (RouteSettings settings) {
           switch (settings.name) {
+            case movieDetailRoute:
+              final id = settings.arguments as int;
+              movieDetailPageRoute = MaterialPageRoute(
+                builder: (_) => MovieDetailPage(id: id),
+                settings: settings,
+              );
+              return movieDetailPageRoute;
+
+            case tvDetailRoute:
+              final id = settings.arguments as int;
+              tvDetailPageRoute = MaterialPageRoute(
+                builder: (_) => TvDetailPage(id: id),
+                settings: settings,
+              );
+              return tvDetailPageRoute;
+
             default:
               return MaterialPageRoute(builder: (_) {
                 return const Scaffold(
@@ -114,6 +165,29 @@ void main() {
 
       expect(find.byKey(const Key('error_message')), findsOneWidget);
       expect(find.text('Empty Movie Watchlist'), findsOneWidget);
+    });
+
+    testWidgets(
+        'should navigate to movie detail page when movie watchlist item tapped',
+        (tester) async {
+      when(() => mockWatchlistMovieBloc.state)
+          .thenReturn(WatchlistMovieHasData([testMovieWatchlist]));
+      when(() => mockMovieDetailBloc.state).thenReturn(MovieDetailLoading());
+      when(() => mockMovieWatchlistBloc.state)
+          .thenReturn(const MovieWatchlistState());
+
+      await tester.pumpWidget(_makeTestableWidget(const WatchlistPage()));
+
+      expect(find.byKey(const Key('movie_watchlist_listview')), findsOneWidget);
+
+      final movieItem = find.byKey(const Key('movie_0'));
+
+      expect(movieItem, findsOneWidget);
+
+      await tester.tap(movieItem);
+      await tester.pump();
+
+      verify(() => mockRouteObserver.didPush(movieDetailPageRoute, any()));
     });
   });
 
@@ -182,6 +256,38 @@ void main() {
 
       expect(find.byKey(const Key('error_message')), findsOneWidget);
       expect(find.text('Empty TV Watchlist'), findsOneWidget);
+    });
+
+    testWidgets(
+        'should navigate to tv detail page when tv watchlist item tapped',
+        (tester) async {
+      when(() => mockWatchlistTvSeriesBloc.state)
+          .thenReturn(WatchlistTvSeriesHasData([testTvWatchlist]));
+      when(() => mockTvSeriesDetailBloc.state)
+          .thenReturn(TvSeriesDetailLoading());
+      when(() => mockTvSeriesWatchlistBloc.state)
+          .thenReturn(const TvSeriesWatchlistState());
+
+      await tester.pumpWidget(_makeTestableWidget(const WatchlistPage()));
+
+      final tvTab = find.byKey(const Key('tv_tab'));
+
+      expect(tvTab, findsOneWidget);
+
+      await tester.tap(tvTab);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byKey(const Key('tv_watchlist_listview')), findsOneWidget);
+
+      final tvItem = find.byKey(const Key('tv_0'));
+
+      expect(tvItem, findsOneWidget);
+
+      await tester.tap(tvItem);
+      await tester.pump();
+
+      verify(() => mockRouteObserver.didPush(tvDetailPageRoute, any()));
     });
   });
 }

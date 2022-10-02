@@ -31,13 +31,13 @@
             <td class="headerValue">lcov.info</td>
             <td></td>
             <td class="headerItem">Lines:</td>
-            <td class="headerCovTableEntry">115</td>
+            <td class="headerCovTableEntry">121</td>
             <td class="headerCovTableEntry">124</td>
-            <td class="headerCovTableEntryHi">92.7 %</td>
+            <td class="headerCovTableEntryHi">97.6 %</td>
           </tr>
           <tr>
             <td class="headerItem">Date:</td>
-            <td class="headerValue">2022-09-10 20:20:31</td>
+            <td class="headerValue">2022-10-02 15:16:08</td>
             <td></td>
           </tr>
           <tr><td><img src="../../../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
@@ -184,15 +184,15 @@
 <a name="126"><span class="lineNum">     126 </span><span class="lineCov">          3 :                               builder: (context, state) {</span></a>
 <a name="127"><span class="lineNum">     127 </span><span class="lineCov">          3 :                                 return ElevatedButton(</span></a>
 <a name="128"><span class="lineNum">     128 </span>            :                                   key: const Key('watchlist_button'),</a>
-<a name="129"><span class="lineNum">     129 </span><span class="lineNoCov">          0 :                                   onPressed: () async {</span></a>
-<a name="130"><span class="lineNum">     130 </span><span class="lineNoCov">          0 :                                     if (!state.isAddedToWatchlist) {</span></a>
+<a name="129"><span class="lineNum">     129 </span><span class="lineCov">          1 :                                   onPressed: () async {</span></a>
+<a name="130"><span class="lineNum">     130 </span><span class="lineCov">          1 :                                     if (!state.isAddedToWatchlist) {</span></a>
 <a name="131"><span class="lineNum">     131 </span>            :                                       context</a>
-<a name="132"><span class="lineNum">     132 </span><span class="lineNoCov">          0 :                                           .read&lt;TvSeriesWatchlistBloc&gt;()</span></a>
-<a name="133"><span class="lineNum">     133 </span><span class="lineNoCov">          0 :                                           .add(AddWatchlist(tv));</span></a>
+<a name="132"><span class="lineNum">     132 </span><span class="lineCov">          1 :                                           .read&lt;TvSeriesWatchlistBloc&gt;()</span></a>
+<a name="133"><span class="lineNum">     133 </span><span class="lineCov">          3 :                                           .add(AddWatchlist(tv));</span></a>
 <a name="134"><span class="lineNum">     134 </span>            :                                     } else {</a>
 <a name="135"><span class="lineNum">     135 </span>            :                                       context</a>
-<a name="136"><span class="lineNum">     136 </span><span class="lineNoCov">          0 :                                           .read&lt;TvSeriesWatchlistBloc&gt;()</span></a>
-<a name="137"><span class="lineNum">     137 </span><span class="lineNoCov">          0 :                                           .add(RemoveWatchlist(tv));</span></a>
+<a name="136"><span class="lineNum">     136 </span><span class="lineCov">          1 :                                           .read&lt;TvSeriesWatchlistBloc&gt;()</span></a>
+<a name="137"><span class="lineNum">     137 </span><span class="lineCov">          3 :                                           .add(RemoveWatchlist(tv));</span></a>
 <a name="138"><span class="lineNum">     138 </span>            :                                     }</a>
 <a name="139"><span class="lineNum">     139 </span>            :                                   },</a>
 <a name="140"><span class="lineNum">     140 </span><span class="lineCov">          3 :                                   child: Row(</span></a>

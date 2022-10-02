@@ -88,6 +88,7 @@ void main() {
 
     await tester.pumpWidget(_makeTestableWidget(const PopularTvSeriesPage()));
 
+    verify(() => mockPopularTvSeriesBloc.add(const FetchPopularTvSeries()));
     expect(find.byType(ListView), findsOneWidget);
     expect(find.byType(ItemCard), findsOneWidget);
   });

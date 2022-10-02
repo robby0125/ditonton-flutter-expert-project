@@ -1,8 +1,5 @@
 part of 'popular_movie_bloc.dart';
 
-class FetchPopularMovies extends Equatable {
+class FetchPopularMovies {
   const FetchPopularMovies();
-
-  @override
-  List<Object> get props => [];
 }

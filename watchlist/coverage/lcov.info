@@ -1,8 +1,6 @@
 SF:lib/presentation/bloc/movie/watchlist_movie_event.dart
 DA:4,4
-DA:6,0
-DA:7,0
-LF:3
+LF:1
 LH:1
 end_of_record
 SF:lib/presentation/bloc/movie/watchlist_movie_state.dart
@@ -48,9 +46,7 @@ LH:9
 end_of_record
 SF:lib/presentation/bloc/tv_series/watchlist_tv_series_event.dart
 DA:4,4
-DA:6,0
-DA:7,0
-LF:3
+LF:1
 LH:1
 end_of_record
 SF:lib/presentation/bloc/tv_series/watchlist_tv_series_bloc.dart
@@ -106,9 +102,9 @@ DA:81,1
 DA:82,1
 DA:83,1
 DA:84,1
-DA:85,0
-DA:86,0
-DA:89,0
+DA:85,1
+DA:86,1
+DA:89,1
 DA:94,2
 DA:96,1
 DA:97,1
@@ -129,9 +125,9 @@ DA:127,1
 DA:128,1
 DA:129,1
 DA:130,1
-DA:131,0
-DA:132,0
-DA:135,0
+DA:131,1
+DA:132,1
+DA:135,1
 DA:140,2
 DA:142,1
 DA:143,1
@@ -144,5 +140,5 @@ DA:167,1
 DA:169,2
 DA:170,1
 LF:74
-LH:65
+LH:71
 end_of_record

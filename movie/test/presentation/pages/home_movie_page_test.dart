@@ -17,10 +17,6 @@ class MockNowPlayingMovieBloc
     extends MockBloc<FetchNowPlayingMovies, NowPlayingMovieState>
     implements NowPlayingMovieBloc {}
 
-class FakeFetchNowPlayingMovies extends Fake implements FetchNowPlayingMovies {}
-
-class FakeNowPlayingMovieState extends Fake implements NowPlayingMovieState {}
-
 void main() {
   late MockNowPlayingMovieBloc mockNowPlayingMovieBloc;
   late MockPopularMovieBloc mockPopularMovieBloc;
@@ -31,6 +27,7 @@ void main() {
   late MaterialPageRoute popularRoute;
   late MaterialPageRoute topRatedRoute;
   late MaterialPageRoute detailRoute;
+  late MaterialPageRoute searchPageRoute;
 
   setUp(() {
     mockNowPlayingMovieBloc = MockNowPlayingMovieBloc();
@@ -93,6 +90,16 @@ void main() {
 
               return detailRoute;
 
+            case searchRoute:
+              searchPageRoute = MaterialPageRoute(
+                builder: (_) {
+                  return const Scaffold(
+                    body: SizedBox.shrink(),
+                  );
+                },
+              );
+              return searchPageRoute;
+
             default:
               return MaterialPageRoute(builder: (_) {
                 return const Scaffold(
@@ -112,6 +119,19 @@ void main() {
 
     expect(find.byType(AppBar), findsOneWidget);
     expect(find.text('Ditonton Movies'), findsOneWidget);
+  });
+
+  testWidgets('should navigate to search route when search icon tapped', (tester) async {
+    await tester.pumpWidget(_makeTestableWidget(const HomeMoviePage()));
+
+    final searchButton = find.byIcon(Icons.search);
+
+    expect(searchButton, findsOneWidget);
+
+    await tester.tap(searchButton);
+    await tester.pump();
+
+    verify(() => mockRouteObserver.didPush(searchPageRoute, any()));
   });
 
   testWidgets(

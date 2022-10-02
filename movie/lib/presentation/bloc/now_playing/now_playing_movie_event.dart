@@ -1,8 +1,5 @@
 part of 'now_playing_movie_bloc.dart';
 
-class FetchNowPlayingMovies extends Equatable {
+class FetchNowPlayingMovies {
   const FetchNowPlayingMovies();
-
-  @override
-  List<Object?> get props => [];
 }

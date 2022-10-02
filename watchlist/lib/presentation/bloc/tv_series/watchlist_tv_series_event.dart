@@ -1,8 +1,5 @@
 part of 'watchlist_tv_series_bloc.dart';
 
-class FetchWatchlistTvSeries extends Equatable {
+class FetchWatchlistTvSeries {
   const FetchWatchlistTvSeries();
-
-  @override
-  List<Object?> get props => [];
 }

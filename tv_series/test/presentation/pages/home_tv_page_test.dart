@@ -33,6 +33,7 @@ void main() {
   late MaterialPageRoute popularRoute;
   late MaterialPageRoute topRatedRoute;
   late MaterialPageRoute detailRoute;
+  late MaterialPageRoute searchPageRoute;
 
   setUp(() {
     mockNowPlayingTvSeriesBloc = MockNowPlayingTvSeriesBloc();
@@ -95,6 +96,16 @@ void main() {
 
               return detailRoute;
 
+            case searchRoute:
+              searchPageRoute = MaterialPageRoute(
+                builder: (_) {
+                  return const Scaffold(
+                    body: SizedBox.shrink(),
+                  );
+                },
+              );
+              return searchPageRoute;
+
             default:
               return MaterialPageRoute(builder: (_) {
                 return const Scaffold(
@@ -116,6 +127,20 @@ void main() {
     expect(find.text('Ditonton TV Series'), findsOneWidget);
   });
 
+  testWidgets('should navigate to search route when search icon tapped',
+      (tester) async {
+    await tester.pumpWidget(_makeTestableWidget(const HomeTvPage()));
+
+    final searchButton = find.byIcon(Icons.search);
+
+    expect(searchButton, findsOneWidget);
+
+    await tester.tap(searchButton);
+    await tester.pump();
+
+    verify(() => mockRouteObserver.didPush(searchPageRoute, any()));
+  });
+
   testWidgets(
       'should display error message when get now playing TV Series is failed',
       (tester) async {
@@ -124,6 +149,9 @@ void main() {
 
     await tester.pumpWidget(_makeTestableWidget(const HomeTvPage()));
 
+    verify(
+      () => mockNowPlayingTvSeriesBloc.add(const FetchNowPlayingTvSeries()),
+    );
     expect(find.text('Server Failure'), findsOneWidget);
   });
 

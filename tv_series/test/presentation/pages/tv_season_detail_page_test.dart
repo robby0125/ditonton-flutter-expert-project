@@ -64,6 +64,7 @@ void main() {
       _makeTestableWidget(const TvSeasonDetailPage(tvId: 1, seasonNumber: 1)),
     );
 
+    verify(() => mockTvSeasonDetailBloc.add(const FetchTvSeasonDetail(1, 1)));
     expect(find.byType(Text), findsWidgets);
     expect(find.text(testSeasonDetail.name), findsWidgets);
   });
@@ -87,14 +88,44 @@ void main() {
     when(() => mockTvSeasonDetailBloc.state)
         .thenReturn(TvSeasonDetailHasData(testTvDetail, testSeasonDetail));
     when(() => mockTvEpisodePanelBloc.state)
+        .thenReturn(const TvEpisodePanelState([]));
+
+    await tester.pumpWidget(
+      _makeTestableWidget(const TvSeasonDetailPage(tvId: 1, seasonNumber: 1)),
+    );
+
+    final episodePanel = find.byKey(const Key('episode_panel_1'));
+
+    expect(episodePanel, findsOneWidget);
+
+    await tester.ensureVisible(episodePanel);
+    await tester.tap(episodePanel);
+    await tester.pump();
+
+    verify(() => mockTvEpisodePanelBloc.add(const OpenPanel(0)));
+    expect(find.byType(ExpansionPanelList), findsOneWidget);
+    expect(find.text('Coming Soon!'), findsOneWidget);
+  });
+
+  testWidgets('should add ClosePanel when opened episode panel is tapped', (tester) async {
+    when(() => mockTvSeasonDetailBloc.state)
+        .thenReturn(TvSeasonDetailHasData(testTvDetail, testSeasonDetail));
+    when(() => mockTvEpisodePanelBloc.state)
         .thenReturn(const TvEpisodePanelState([0]));
 
     await tester.pumpWidget(
       _makeTestableWidget(const TvSeasonDetailPage(tvId: 1, seasonNumber: 1)),
     );
 
-    expect(find.byType(ExpansionPanelList), findsOneWidget);
-    expect(find.text('Coming Soon!'), findsOneWidget);
+    final episodePanel = find.byKey(const Key('episode_panel_1'));
+
+    expect(episodePanel, findsOneWidget);
+
+    await tester.ensureVisible(episodePanel);
+    await tester.tap(episodePanel);
+    await tester.pump();
+
+    verify(() => mockTvEpisodePanelBloc.add(const ClosePanel(0)));
   });
 
   testWidgets('should display error message when loading data is failed',
