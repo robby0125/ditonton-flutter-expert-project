@@ -32,6 +32,14 @@ void main() {
     expect(searchBloc.state, SearchEmpty());
   });
 
+  blocTest<SearchBloc, SearchState>(
+    'should emit [Empty] when clearing state',
+    build: () => searchBloc,
+    seed: () => SearchLoading(),
+    act: (bloc) => bloc.add(const ClearState()),
+    expect: () => [SearchEmpty()],
+  );
+
   group('Search movie', () {
     final tMovieModel = Movie(
       adult: false,

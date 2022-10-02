@@ -22,3 +22,7 @@ class OnQueryChanged extends SearchEvent {
         contentSearch,
       ];
 }
+
+class ClearState extends SearchEvent {
+  const ClearState();
+}

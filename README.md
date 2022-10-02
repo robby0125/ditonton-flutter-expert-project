@@ -2,3 +2,9 @@
 
 > Codemagic Build Screenshot
 > ![Codemagic Build](img/codemagic_build.png)
+
+> Analytics Dashboard
+> ![Analytics Dashboard](img/analytics_dashboard.png)
+
+> Crashlytics Dashboard
+> ![Crashlytics Dashboard](img/crashlytics_dashboard.png)

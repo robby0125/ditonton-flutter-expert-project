@@ -5,13 +5,26 @@ import 'package:movie/movie.dart';
 import 'package:search/presentation/bloc/search_bloc.dart';
 import 'package:tv_series/tv_series.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   final ContentSearch type;
 
   const SearchPage({
     Key? key,
     required this.type,
   }) : super(key: key);
+
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends State<SearchPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      BlocProvider.of<SearchBloc>(context).add(const ClearState());
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,7 @@ class SearchPage extends StatelessWidget {
                 context.read<SearchBloc>().add(
                       OnQueryChanged(
                         query: query,
-                        contentSearch: type,
+                        contentSearch: widget.type,
                       ),
                     );
               },
@@ -62,7 +75,7 @@ class SearchPage extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final data = result[index];
 
-                        if (type == ContentSearch.Movie) {
+                        if (widget.type == ContentSearch.Movie) {
                           data as Movie;
                         } else {
                           data as Tv;
@@ -79,7 +92,7 @@ class SearchPage extends StatelessWidget {
                           overview: overview,
                           posterPath: posterPath,
                           onTap: () {
-                            final targetRouteName = type == ContentSearch.Movie
+                            final targetRouteName = widget.type == ContentSearch.Movie
                                 ? movieDetailRoute
                                 : tvDetailRoute;
 

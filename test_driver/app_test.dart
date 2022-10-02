@@ -6,6 +6,7 @@ void main() {
 
   setUpAll(() async {
     driver = await FlutterDriver.connect();
+    await driver.waitUntilFirstFrameRasterized();
   });
 
   tearDownAll(() async {
@@ -155,8 +156,7 @@ void main() {
 
       await driver.tap(find.byValueKey('tv_tab'));
 
-      expect(
-          await driver.getText(emptyWatchlistMessage), 'Empty TV Watchlist');
+      expect(await driver.getText(emptyWatchlistMessage), 'Empty TV Watchlist');
 
       await driver.tap(find.pageBack());
       await driver.tap(find.byValueKey('tv_series_button'));
@@ -192,8 +192,7 @@ void main() {
       final emptyWatchlistMessage = find.text('Empty TV Watchlist');
 
       expect(await driver.getText(watchlistPageTitle), 'Watchlist');
-      expect(
-          await driver.getText(emptyWatchlistMessage), 'Empty TV Watchlist');
+      expect(await driver.getText(emptyWatchlistMessage), 'Empty TV Watchlist');
     });
 
     test('back to home', () async {
@@ -207,7 +206,8 @@ void main() {
       final detailScrollable = find.byValueKey('detail_scrollable');
       final seasonButton = find.byValueKey('season_button_0');
 
-      await driver.scrollUntilVisible(detailScrollable, seasonButton, dyScroll: -500);
+      await driver.scrollUntilVisible(detailScrollable, seasonButton,
+          dyScroll: -500);
       await driver.tap(seasonButton);
       await driver.waitFor(find.byValueKey('season_name'));
     });

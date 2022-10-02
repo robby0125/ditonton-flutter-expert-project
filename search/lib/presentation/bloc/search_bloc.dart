@@ -44,6 +44,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       },
       transformer: debounce(const Duration(milliseconds: 500)),
     );
+    on<ClearState>((event, emit) {
+      emit(SearchEmpty());
+    });
   }
 
   EventTransformer<T> debounce<T>(Duration duration) {
